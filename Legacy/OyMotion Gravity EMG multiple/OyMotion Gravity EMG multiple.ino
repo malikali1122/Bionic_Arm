@@ -38,16 +38,17 @@
 #include "EMGFilters.h"
 
 void exportColumnHeaders(void);
-void exportToPutty(char *valueDesc, int value);
+void exportCurrentTimeToPutty(void);
+void exportSignalDataToPutty(int value);
+
+#define TIMING_DEBUG 1
+
+// Modify value according to number of sensors used
+#define SENSORS_COUNT 2
 
 char colStr[100] = "";
 char dataStr[100] = "";
 char buffer[7];
-const char * colHeaders[] = {"Sensor1", "Sensor2", "Sensor3", "Sensor4"};
-
-#define noSensorReadings (sizeof(colHeaders) / sizeof(const char *))
-
-#define TIMING_DEBUG 1
 
 EMGFilters myFilter;
 // discrete filters must works with fixed sample frequence
@@ -65,15 +66,12 @@ int humFreq = NOTCH_FREQ_50HZ;
 // put on the sensors, and release your muscles;
 // wait a few seconds, and select the max value as the threshold;
 // any value under threshold will be set to zero
-static int Threshold =16;
+static int Threshold = 16;
 
 unsigned long timeStamp;
 unsigned long timeBudget;
 
-int sensorInput1 = A1; // input pin number
-int sensorInput2 = A2; // input pin number
-int sensorInput3 = A3; // input pin number
-int sensorInput4 = A4; // input pin number
+int sensorPins[4] = {A1, A2, A3, A4};
 
 void getSensorReading(int);
 
@@ -98,12 +96,11 @@ void loop() {
     // the time cost should be measured each loop
     /*------------start here-------------------*/
 
-    ltoa(millis(),buffer,10); //convert long to charStr
+    exportCurrentTimeToPutty();
     
-    getSensorReading(sensorInput1);
-    getSensorReading(sensorInput2);
-    getSensorReading(sensorInput3);
-    getSensorReading(sensorInput4);
+    for (int i = 0; i < SENSORS_COUNT; i++){
+      getSensorReading(sensorPins[i]);
+    }
 
     Serial.println(" ");
 
@@ -116,7 +113,7 @@ void loop() {
 }
 
 void getSensorReading(int sensorNumber) {
-  timeStamp = micros();
+    timeStamp = micros();
 
     int Value = analogRead(sensorNumber);
 
@@ -129,7 +126,7 @@ void getSensorReading(int sensorNumber) {
 
     timeStamp = micros() - timeStamp;
 
-    exportToPutty(envlope);
+    exportSignalDataToPutty(envlope);
     // if (TIMING_DEBUG) {
     //     // Serial.print("Read Data: "); Serial.println(Value);
     //     // Serial.print("Filtered Data: ");Serial.println(DataAfterFilter);
@@ -143,20 +140,34 @@ void getSensorReading(int sensorNumber) {
 }
 
 void exportColumnHeaders(void){
-  colStr[0] = 0;
+    colStr[0] = 0;  //clean out string
 
-  for (int i = 0; i < noSensorReadings; i++){
-    strcat(colStr, colHeaders[i]);
+    strcat(colStr, "Time");
     strcat(colStr, ", "); //append the delimiter
-  }
-  Serial.println(colStr);
+
+    for (int i = 0; i < SENSORS_COUNT; i++){
+      strcat(colStr, "Sensor");
+      dtostrf(i+1, 1, 1, buffer);
+      strcat(colStr, buffer);
+      strcat(colStr, ", "); //append the delimiter
+    }
+
+    Serial.println(colStr);
 
 }
 
-void exportToPutty(int value){
-  dataStr[0] = 0; //clean out string
-  dtostrf(value, 5, 1, buffer);
-  strcat(dataStr, buffer); //add it to the end
-  strcat(dataStr, ", "); //append the delimiter
-  Serial.print(dataStr);
+void exportCurrentTimeToPutty(void){
+    dataStr[0] = 0; //clean out string
+    ltoa(millis(),buffer,10); //convert long to charStr
+    strcat(dataStr, buffer); //add it to the end
+    strcat(dataStr, ", "); //append the delimiter
+    Serial.print(dataStr);
+}
+
+void exportSignalDataToPutty(int value){
+    dataStr[0] = 0; //clean out string
+    dtostrf(value, 1, 1, buffer);
+    strcat(dataStr, buffer); //add it to the end
+    strcat(dataStr, ", "); //append the delimiter
+    Serial.print(dataStr);
 }
