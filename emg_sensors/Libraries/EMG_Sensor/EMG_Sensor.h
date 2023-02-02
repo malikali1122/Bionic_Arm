@@ -5,24 +5,26 @@
 // include Arduino library
 #include "Arduino.h"
 
+#include "EMGFilters.h"
+
 class EMG_Sensor
 {
   public:
-    EMG_Sensor(int pin);
+    EMG_Sensor(int sensorPin);
     void init();
-    float read();
-    bool digitalRead();
+    void setThreshold(int threshold);
+    int readSensorData();
+
   private:
-    // pin number
-    int _pin;
+    int sensorPin;
+    int threshold;
+    int sampleRate;
+    int humFreq;
+    char muscle[];
+    unsigned long timeStamp;
+    unsigned long timeBudget;
 
-    // variables for digital conversion
-    int max;
-    int upper_cutoff;
-    int lower_cutoff;
-
-    // digital value
-    bool digitalValue;
+    EMGFilters myFilter;
 };
 
 #endif
