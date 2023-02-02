@@ -50,7 +50,7 @@ char colStr[100] = "";
 char dataStr[100] = "";
 char buffer[10];
 
-EMGFilters myFilter;
+EMGFilters myFilter[SENSORS_COUNT];
 // discrete filters must works with fixed sample frequence
 // our emg filter only support "SAMPLE_FREQ_500HZ" or "SAMPLE_FREQ_1000HZ"
 // other sampleRate inputs will bypass all the EMG_FILTER
@@ -66,7 +66,7 @@ int humFreq = NOTCH_FREQ_50HZ;
 // put on the sensors, and release your muscles;
 // wait a few seconds, and select the max value as the threshold;
 // any value under threshold will be set to zero
-static int Threshold = 16;
+static int Threshold = 20;
 
 unsigned long timeStamp;
 unsigned long timeBudget;
@@ -74,11 +74,13 @@ unsigned long startTime; //arduino reading time
 
 int sensorPins[4] = {A1, A2, A3, A4};
 
-void getSensorReading(int);
+void getSensorReading(int sensorNumber, int a);
 
 void setup() {
     /* add setup code here */
-    myFilter.init(sampleRate, humFreq, true, true, true);
+    for (int i = 0; i < SENSORS_COUNT; i++){
+      myFilter[i].init(sampleRate, humFreq, true, true, true);
+    }
 
     // open serial
     Serial.begin(115200);
@@ -101,7 +103,7 @@ void loop() {
     exportCurrentTimeToPutty();
     
     for (int i = 0; i < SENSORS_COUNT; i++){
-      getSensorReading(sensorPins[i]);
+      getSensorReading(sensorPins[i], i);
     }
 
     Serial.println(" ");
@@ -114,13 +116,13 @@ void loop() {
     // SAMPLE_FREQ_500HZ
 }
 
-void getSensorReading(int sensorNumber) {
+void getSensorReading(int sensorNumber, int a){
     timeStamp = micros();
 
     int Value = analogRead(sensorNumber);
 
     // filter processing
-    int DataAfterFilter = myFilter.update(Value);
+    int DataAfterFilter = myFilter[a].update(Value);
 
     int envlope = sq(DataAfterFilter);
     // any value under threshold will be set to zero
