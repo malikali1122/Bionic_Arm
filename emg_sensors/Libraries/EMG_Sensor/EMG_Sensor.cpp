@@ -87,9 +87,25 @@ void EMG_Sensor::init()
     // micros will overflow and auto return to zero every 70 minutes
 }
 
+// Set the threshold
 void EMG_Sensor::setThreshold(int threshold)
 {
     this->threshold = threshold;
+}
+
+// Read the sensor data
+int EMG_Sensor::readSensorData()
+{
+    int value = analogRead(sensorPin);
+
+    // filter processing
+    int dataAfterFilter = myFilter.update(value);
+
+    int envlope = sq(dataAfterFilter);
+    // any value under threshold will be set to zero
+    envlope = (envlope > threshold) ? envlope : 0;
+
+    return envlope;
 }
 
 // void setup()
@@ -101,38 +117,38 @@ void EMG_Sensor::setThreshold(int threshold)
 //     // Serial.begin(115200);
 // }
 
-void loop()
-{
-    /* add main program code here */
-    // In order to make sure the ADC sample frequence on arduino,
-    // the time cost should be measured each loop
-    /*------------start here-------------------*/
-    timeStamp = micros();
+// void loop()
+// {
+//     /* add main program code here */
+//     // In order to make sure the ADC sample frequence on arduino,
+//     // the time cost should be measured each loop
+//     /*------------start here-------------------*/
+//     timeStamp = micros();
 
-    int Value = analogRead(SensorInputPin);
+//     int value = analogRead(SensorInputPin);
 
-    // filter processing
-    int DataAfterFilter = myFilter.update(Value);
+//     // filter processing
+//     int dataAfterFilter = myFilter.update(value);
 
-    int envlope = sq(DataAfterFilter);
-    // any value under threshold will be set to zero
-    envlope = (envlope > threshold) ? envlope : 0;
+//     int envlope = sq(dataAfterFilter);
+//     // any value under threshold will be set to zero
+//     envlope = (envlope > threshold) ? envlope : 0;
 
-    timeStamp = micros() - timeStamp;
-    if (TIMING_DEBUG)
-    {
-        // Serial.print("Read Data: "); Serial.println(Value);
-        // Serial.print("Filtered Data: ");Serial.println(DataAfterFilter);
-        Serial.print("Squared Data: ");
-        Serial.println(envlope);
-        // Serial.print("Filters cost time: "); Serial.println(timeStamp);
-        // the filter cost average around 520 us
-    }
+//     timeStamp = micros() - timeStamp;
+//     if (TIMING_DEBUG)
+//     {
+//         // Serial.print("Read Data: "); Serial.println(value);
+//         // Serial.print("Filtered Data: ");Serial.println(dataAfterFilter);
+//         Serial.print("Squared Data: ");
+//         Serial.println(envlope);
+//         // Serial.print("Filters cost time: "); Serial.println(timeStamp);
+//         // the filter cost average around 520 us
+//     }
 
-    /*------------end here---------------------*/
-    // if less than timeBudget, then you still have (timeBudget - timeStamp) to
-    // do your work
-    delayMicroseconds(500);
-    // if more than timeBudget, the sample rate need to reduce to
-    // SAMPLE_FREQ_500HZ
-}
+//     /*------------end here---------------------*/
+//     // if less than timeBudget, then you still have (timeBudget - timeStamp) to
+//     // do your work
+//     delayMicroseconds(500);
+//     // if more than timeBudget, the sample rate need to reduce to
+//     // SAMPLE_FREQ_500HZ
+// }
