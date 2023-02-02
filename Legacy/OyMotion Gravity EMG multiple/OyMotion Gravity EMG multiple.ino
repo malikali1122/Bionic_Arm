@@ -38,18 +38,19 @@
 #include "EMGFilters.h"
 
 void exportColumnHeaders(void);
-void exportToPutty(char *valueDesc, int value);
-
-char colStr[100] = "";
-char dataStr[100] = "";
-char buffer[7];
-const char * colHeaders[] = {"Sensor1", "Sensor2", "Sensor3", "Sensor4"};
-
-#define noSensorReadings (sizeof(colHeaders) / sizeof(const char *))
+void exportCurrentTimeToPutty(void);
+void exportSignalDataToPutty(int value);
 
 #define TIMING_DEBUG 1
 
-EMGFilters myFilter;
+// Modify value according to number of sensors used
+#define SENSORS_COUNT 3
+
+char colStr[100] = "";
+char dataStr[100] = "";
+char buffer[10];
+
+EMGFilters myFilter[SENSORS_COUNT];
 // discrete filters must works with fixed sample frequence
 // our emg filter only support "SAMPLE_FREQ_500HZ" or "SAMPLE_FREQ_1000HZ"
 // other sampleRate inputs will bypass all the EMG_FILTER
@@ -65,21 +66,21 @@ int humFreq = NOTCH_FREQ_50HZ;
 // put on the sensors, and release your muscles;
 // wait a few seconds, and select the max value as the threshold;
 // any value under threshold will be set to zero
-static int Threshold =16;
+static int Threshold = 20;
 
 unsigned long timeStamp;
 unsigned long timeBudget;
+unsigned long startTime; //arduino reading time
 
-int sensorInput1 = A1; // input pin number
-int sensorInput2 = A2; // input pin number
-int sensorInput3 = A3; // input pin number
-int sensorInput4 = A4; // input pin number
+int sensorPins[4] = {A1, A2, A3, A4};
 
-void getSensorReading(int);
+void getSensorReading(int sensorNumber, int a);
 
 void setup() {
     /* add setup code here */
-    myFilter.init(sampleRate, humFreq, true, true, true);
+    for (int i = 0; i < SENSORS_COUNT; i++){
+      myFilter[i].init(sampleRate, humFreq, true, true, true);
+    }
 
     // open serial
     Serial.begin(115200);
@@ -90,6 +91,7 @@ void setup() {
     // micros will overflow and auto return to zero every 70 minutes
 
     exportColumnHeaders();
+    startTime = millis();
 }
 
 void loop() {
@@ -98,12 +100,11 @@ void loop() {
     // the time cost should be measured each loop
     /*------------start here-------------------*/
 
-    ltoa(millis(),buffer,10); //convert long to charStr
+    exportCurrentTimeToPutty();
     
-    getSensorReading(sensorInput1);
-    getSensorReading(sensorInput2);
-    getSensorReading(sensorInput3);
-    getSensorReading(sensorInput4);
+    for (int i = 0; i < SENSORS_COUNT; i++){
+      getSensorReading(sensorPins[i], i);
+    }
 
     Serial.println(" ");
 
@@ -115,13 +116,13 @@ void loop() {
     // SAMPLE_FREQ_500HZ
 }
 
-void getSensorReading(int sensorNumber) {
-  timeStamp = micros();
+void getSensorReading(int sensorNumber, int a){
+    timeStamp = micros();
 
     int Value = analogRead(sensorNumber);
 
     // filter processing
-    int DataAfterFilter = myFilter.update(Value);
+    int DataAfterFilter = myFilter[a].update(Value);
 
     int envlope = sq(DataAfterFilter);
     // any value under threshold will be set to zero
@@ -129,7 +130,7 @@ void getSensorReading(int sensorNumber) {
 
     timeStamp = micros() - timeStamp;
 
-    exportToPutty(envlope);
+    exportSignalDataToPutty(envlope);
     // if (TIMING_DEBUG) {
     //     // Serial.print("Read Data: "); Serial.println(Value);
     //     // Serial.print("Filtered Data: ");Serial.println(DataAfterFilter);
@@ -143,20 +144,34 @@ void getSensorReading(int sensorNumber) {
 }
 
 void exportColumnHeaders(void){
-  colStr[0] = 0;
+    colStr[0] = 0;  //clean out string
 
-  for (int i = 0; i < noSensorReadings; i++){
-    strcat(colStr, colHeaders[i]);
+    strcat(colStr, "Time");
     strcat(colStr, ", "); //append the delimiter
-  }
-  Serial.println(colStr);
+
+    for (int i = 0; i < SENSORS_COUNT; i++){
+      strcat(colStr, "Sensor");
+      sprintf(buffer, "%d", i+1);
+      strcat(colStr, buffer);
+      strcat(colStr, ", "); //append the delimiter
+    }
+
+    Serial.println(colStr);
 
 }
 
-void exportToPutty(int value){
-  dataStr[0] = 0; //clean out string
-  dtostrf(value, 5, 1, buffer);
-  strcat(dataStr, buffer); //add it to the end
-  strcat(dataStr, ", "); //append the delimiter
-  Serial.print(dataStr);
+void exportCurrentTimeToPutty(void){
+    dataStr[0] = 0; //clean out string
+    ltoa(millis() - startTime,buffer,10); //convert long to charStr
+    strcat(dataStr, buffer); //add it to the end
+    strcat(dataStr, ", "); //append the delimiter
+    Serial.print(dataStr);
+}
+
+void exportSignalDataToPutty(int value){
+    dataStr[0] = 0; //clean out string
+    sprintf(buffer, "%d", value);
+    strcat(dataStr, buffer); //add it to the end
+    strcat(dataStr, ", "); //append the delimiter
+    Serial.print(dataStr);
 }
