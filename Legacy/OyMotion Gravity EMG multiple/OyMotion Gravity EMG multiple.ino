@@ -44,11 +44,11 @@ void exportSignalDataToPutty(int value);
 #define TIMING_DEBUG 1
 
 // Modify value according to number of sensors used
-#define SENSORS_COUNT 2
+#define SENSORS_COUNT 3
 
 char colStr[100] = "";
 char dataStr[100] = "";
-char buffer[7];
+char buffer[10];
 
 EMGFilters myFilter;
 // discrete filters must works with fixed sample frequence
@@ -70,6 +70,7 @@ static int Threshold = 16;
 
 unsigned long timeStamp;
 unsigned long timeBudget;
+unsigned long runTime; //arduino reading time
 
 int sensorPins[4] = {A1, A2, A3, A4};
 
@@ -147,7 +148,7 @@ void exportColumnHeaders(void){
 
     for (int i = 0; i < SENSORS_COUNT; i++){
       strcat(colStr, "Sensor");
-      dtostrf(i+1, 1, 1, buffer);
+      sprintf(buffer, "%d", i+1);
       strcat(colStr, buffer);
       strcat(colStr, ", "); //append the delimiter
     }
@@ -166,7 +167,7 @@ void exportCurrentTimeToPutty(void){
 
 void exportSignalDataToPutty(int value){
     dataStr[0] = 0; //clean out string
-    dtostrf(value, 1, 1, buffer);
+    sprintf(buffer, "%d", value);
     strcat(dataStr, buffer); //add it to the end
     strcat(dataStr, ", "); //append the delimiter
     Serial.print(dataStr);
