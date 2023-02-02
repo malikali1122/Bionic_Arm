@@ -70,7 +70,7 @@ static int Threshold = 16;
 
 unsigned long timeStamp;
 unsigned long timeBudget;
-unsigned long runTime; //arduino reading time
+unsigned long startTime; //arduino reading time
 
 int sensorPins[4] = {A1, A2, A3, A4};
 
@@ -89,6 +89,7 @@ void setup() {
     // micros will overflow and auto return to zero every 70 minutes
 
     exportColumnHeaders();
+    startTime = millis();
 }
 
 void loop() {
@@ -159,7 +160,7 @@ void exportColumnHeaders(void){
 
 void exportCurrentTimeToPutty(void){
     dataStr[0] = 0; //clean out string
-    ltoa(millis(),buffer,10); //convert long to charStr
+    ltoa(millis() - startTime,buffer,10); //convert long to charStr
     strcat(dataStr, buffer); //add it to the end
     strcat(dataStr, ", "); //append the delimiter
     Serial.print(dataStr);
