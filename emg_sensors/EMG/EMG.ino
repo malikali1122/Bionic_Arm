@@ -1,11 +1,19 @@
 #include "EMG_Sensor.h"
+#include "EMGFilters.h"
 
 #define sensorPin1 A0
 #define sensorPin2 A1
 #define sensorPin3 A3
 
+#define TIMING_DEBUG 1
+
 unsigned long runTime;
 unsigned long timeBudget;
+
+// discrete filters must works with fixed sample frequence
+// our emg filter only support "SAMPLE_FREQ_500HZ" or "SAMPLE_FREQ_1000HZ"
+// other sampleRate inputs will bypass all the EMG_FILTER
+int sampleRate = SAMPLE_FREQ_1000HZ;
 
 void setup() {
   // put your setup code here, to run once:
@@ -25,28 +33,8 @@ void loop() {
   runTime = micros();
 
   runTime = micros() - runTime;
-  if (TIMING_DEBUG)
-  {
-      // Serial.print("Read Data: "); Serial.println(value);
-      // Serial.print("Filtered Data: ");Serial.println(dataAfterFilter);
-      Serial.print("Squared Data: ");
-      Serial.println(envlope);
-      // Serial.print("Filters cost time: "); Serial.println(runTime);
-      // the filter cost average around 520 us
-  }
+  timingDebug();
 
   /*------------end here---------------------*/
-  // if runTime less than timeBudget, then you still have (timeBudget - runTime)
-  // to do your work
-  if(timeBudget > runTime) 
-    delayMicroseconds(timeBudget - runTime);
-  else {
-    Serial.print("ERROR: runTime exceeds maximum possible value.\nrunTime: ");
-    Serial.print(runTime);
-    Serial.print(", timeBudget: ");
-    Serial.println(timeBudget);
-  }
-  // if more than timeBudget, the sample rate need to reduce to
-  // SAMPLE_FREQ_500HZ
-
+  maintainOperatingFrequency();
 }

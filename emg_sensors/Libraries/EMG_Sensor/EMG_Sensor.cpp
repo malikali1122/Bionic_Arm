@@ -43,7 +43,6 @@
 // unsigned long timeStamp;
 // unsigned long timeBudget;
 
-#define TIMING_DEBUG 1
 
 EMGFilters myFilter;
 
