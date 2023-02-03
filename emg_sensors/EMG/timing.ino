@@ -15,21 +15,23 @@ void maintainOperatingFrequency() {
     Serial.println(timeBudget);
 
     if (sampleRate == SAMPLE_FREQ_1000HZ)
-      Serial.println("Current sampleRate is 1000Hz. Either reduce the runTime or reduce the sampleRate to 500Hz.") else Serial.println("Current sampleRate is 500Hz. Further reduction in sample rete is not possible. Try to reduce the runTime further.")
+      Serial.println("Current sampleRate is 1000Hz. Either reduce the runTime or reduce the sampleRate to 500Hz.");
+    else
+      Serial.println("Current sampleRate is 500Hz. Further reduction in sample rete is not possible. Try to reduce the runTime further.");
   }
 }
 
 // When TIMING_DEBUG is high, console the timing values.
 void timingDebug() {
   if (TIMING_DEBUG) {
-    Serial.println("")
+    Serial.println("");
     Serial.print("Filters cost time: ");
     // the filter cost average around 520 us
     Serial.println(runTime);
     Serial.print("Time Budget: ");
     Serial.println(timeBudget);
-    Serial.print("Difference:")
-    Serial.println(timeBudget - runTime)
-    Serial.println("")
+    Serial.print("Difference:");
+    Serial.println(timeBudget - runTime);
+    Serial.println("");
   }
 }

@@ -1,9 +1,9 @@
 #include "EMG_Sensor.h"
 #include "EMGFilters.h"
 
-#define sensorPin1 A0
-#define sensorPin2 A1
-#define sensorPin3 A3
+#define sensor1Pin A0
+#define sensor2Pin A1
+#define sensor3Pin A3
 
 // Set 0 if Timing o/p need not be printed
 #define TIMING_DEBUG 1
@@ -16,26 +16,38 @@ unsigned long timeBudget;
 // other sampleRate inputs will bypass all the EMG_FILTER
 int sampleRate = SAMPLE_FREQ_1000HZ;
 
+EMG_Sensor Sensor1(sensor1Pin, sampleRate);
+
 void setup() {
-  // put your setup code here, to run once:
+  // open serial
+  Serial.begin(115200);
 
   // setup for time cost measure
   // using micros()
   timeBudget = 1e6 / sampleRate;
   // micros will overflow and auto return to zero every 70 minutes
 
+  Sensor1.init();
 }
 
 void loop() {
   /* add main program code here */
-  // In order to make sure the ADC sample frequence on arduino,
-  // the time cost should be measured each loop
   /*------------start here-------------------*/
   runTime = micros();
+
+  int value1 = Sensor1.readSensorData();
+
+
+csvExport.setrows(v1,v2,v3)
+
+
 
   runTime = micros() - runTime;
   timingDebug();
 
   /*------------end here---------------------*/
+
+  // In order to make sure the operating frequency of the code
+  // matches the sampling rate
   maintainOperatingFrequency();
 }

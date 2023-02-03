@@ -10,7 +10,7 @@
 class EMG_Sensor
 {
   public:
-    EMG_Sensor(int sensorPin);
+    EMG_Sensor(int sensorPin, int sampleRate);
     void init();
     void setThreshold(int threshold);
     int readSensorData();

@@ -35,40 +35,27 @@
 
 #include "EMGFilters.h"
 
-// int sampleRate = SAMPLE_FREQ_1000HZ;
-// int humFreq = NOTCH_FREQ_50HZ;
-
-// static int Threshold = 0;
-
-// unsigned long timeStamp;
-// unsigned long timeBudget;
-
-
 EMGFilters myFilter;
 
 // Constructor
-EMG_Sensor::EMG_Sensor(int sensorPin) : // private variables
-                                        sensorPin(sensorPin),
+EMG_Sensor::EMG_Sensor(int sensorPin, int sampleRate) : // private variables
+                                                        sensorPin(sensorPin),
+                                                        sampleRate(sampleRate),
 
-                                        // Calibration:
-                                        // put on the sensors, and release your muscles;
-                                        // wait a few seconds, and select the max value as the threshold;
-                                        // any value under threshold will be set to zero
-                                        threshold(0),
+                                                        // Calibration:
+                                                        // put on the sensors, and release your muscles;
+                                                        // wait a few seconds, and select the max value as the threshold;
+                                                        // any value under threshold will be set to zero
+                                                        threshold(0),
 
-                                        // discrete filters must works with fixed sample frequence
-                                        // our emg filter only support "SAMPLE_FREQ_500HZ" or "SAMPLE_FREQ_1000HZ"
-                                        // other sampleRate inputs will bypass all the EMG_FILTER
-                                        sampleRate(SAMPLE_FREQ_1000HZ),
+                                                        // For countries where power transmission is at 50 Hz
+                                                        // For countries where power transmission is at 60 Hz, need to change to
+                                                        // "NOTCH_FREQ_60HZ"
+                                                        // our emg filter only support 50Hz and 60Hz input
+                                                        // other inputs will bypass all the EMG_FILTER
+                                                        humFreq(NOTCH_FREQ_50HZ),
 
-                                        // For countries where power transmission is at 50 Hz
-                                        // For countries where power transmission is at 60 Hz, need to change to
-                                        // "NOTCH_FREQ_60HZ"
-                                        // our emg filter only support 50Hz and 60Hz input
-                                        // other inputs will bypass all the EMG_FILTER
-                                        humFreq(NOTCH_FREQ_50HZ)
-
-                                        myFilter()
+                                                        myFilter()
 {
 }
 
@@ -77,7 +64,6 @@ void EMG_Sensor::init()
 {
     // Initialise the filter
     myFilter.init(sampleRate, humFreq, true, true, true);
-
 }
 
 // Set the threshold
@@ -94,11 +80,11 @@ int EMG_Sensor::readSensorData()
     // filter processing
     int dataAfterFilter = myFilter.update(value);
 
-    int envlope = sq(dataAfterFilter);
+    int envelope = sq(dataAfterFilter);
     // any value under threshold will be set to zero
-    envlope = (envlope > threshold) ? envlope : 0;
+    envelope = (envelope > threshold) ? envelope : 0;
 
-    return envlope;
+    return envelope;
 }
 
 // void setup()
@@ -123,9 +109,9 @@ int EMG_Sensor::readSensorData()
 //     // filter processing
 //     int dataAfterFilter = myFilter.update(value);
 
-//     int envlope = sq(dataAfterFilter);
+//     int envelope = sq(dataAfterFilter);
 //     // any value under threshold will be set to zero
-//     envlope = (envlope > threshold) ? envlope : 0;
+//     envelope = (envelope > threshold) ? envelope : 0;
 
 //     timeStamp = micros() - timeStamp;
 //     if (TIMING_DEBUG)
@@ -133,7 +119,7 @@ int EMG_Sensor::readSensorData()
 //         // Serial.print("Read Data: "); Serial.println(value);
 //         // Serial.print("Filtered Data: ");Serial.println(dataAfterFilter);
 //         Serial.print("Squared Data: ");
-//         Serial.println(envlope);
+//         Serial.println(envelope);
 //         // Serial.print("Filters cost time: "); Serial.println(timeStamp);
 //         // the filter cost average around 520 us
 //     }
