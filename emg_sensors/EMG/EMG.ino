@@ -5,6 +5,7 @@
 #define sensorPin2 A1
 #define sensorPin3 A3
 
+// Set 0 if Timing o/p need not be printed
 #define TIMING_DEBUG 1
 
 unsigned long runTime;

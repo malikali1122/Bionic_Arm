@@ -19,10 +19,17 @@ void maintainOperatingFrequency() {
   }
 }
 
+// When TIMING_DEBUG is high, console the timing values.
 void timingDebug() {
   if (TIMING_DEBUG) {
+    Serial.println("")
     Serial.print("Filters cost time: ");
-    Serial.println(runTime);
     // the filter cost average around 520 us
+    Serial.println(runTime);
+    Serial.print("Time Budget: ");
+    Serial.println(timeBudget);
+    Serial.print("Difference:")
+    Serial.println(timeBudget - runTime)
+    Serial.println("")
   }
 }
