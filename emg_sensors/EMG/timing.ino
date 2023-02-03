@@ -25,7 +25,7 @@ void maintainOperatingFrequency() {
 void timingDebug() {
   if (TIMING_DEBUG) {
     Serial.println("");
-    Serial.print("Filters cost time: ");
+    Serial.print("runTime: ");
     // the filter cost average around 520 us
     Serial.println(runTime);
     Serial.print("Time Budget: ");

@@ -6,7 +6,7 @@
 #define sensor3Pin A3
 
 // Set 0 if Timing o/p need not be printed
-#define TIMING_DEBUG 1
+#define TIMING_DEBUG 0
 
 unsigned long runTime;
 unsigned long timeBudget;
@@ -35,14 +35,16 @@ void loop() {
   /*------------start here-------------------*/
   runTime = micros();
 
-  int value1 = Sensor1.readSensorData();
+  int value = Sensor1.readSensorData();
 
 
-csvExport.setrows(v1,v2,v3)
+
+
 
 
 
   runTime = micros() - runTime;
+
   timingDebug();
 
   /*------------end here---------------------*/
