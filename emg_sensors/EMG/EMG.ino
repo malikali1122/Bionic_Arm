@@ -1,5 +1,6 @@
 #include "EMG_Sensor.h"
 #include "EMGFilters.h"
+#include "ExportCSV.h"
 
 #define sensor1Pin A0
 #define sensor2Pin A1
@@ -7,6 +8,9 @@
 
 // Set 0 if Timing o/p need not be printed
 #define TIMING_DEBUG 0
+
+// Modify value according to number of sensors used
+#define SENSORS_COUNT 2
 
 unsigned long runTime;
 unsigned long timeBudget;
@@ -18,6 +22,8 @@ int sampleRate = SAMPLE_FREQ_1000HZ;
 
 EMG_Sensor Sensor1(sensor1Pin, sampleRate);
 
+ExportCSV myCSV;
+
 void setup() {
   // open serial
   Serial.begin(115200);
@@ -28,6 +34,13 @@ void setup() {
   // micros will overflow and auto return to zero every 70 minutes
 
   Sensor1.init();
+  myCSV.init();
+
+  myCSV.setNumberofSensors(SENSORS_COUNT);
+  // myCSV.setColHeaders("Bicep, Tricep");
+  myCSV.exportCSVColHeaders();
+
+  myCSV.startTimer();
 }
 
 void loop() {
@@ -35,7 +48,13 @@ void loop() {
   /*------------start here-------------------*/
   runTime = micros();
 
+  myCSV.storeCurrentTime();
+
   int value = Sensor1.readSensorData();
+
+  myCSV.storeSensorData(value);
+
+  myCSV.exportDataRow();
 
 
 
