@@ -34,15 +34,14 @@ void setup() {
   timeBudget = 1e6 / sampleRate;
   // micros will overflow and auto return to zero every 70 minutes
 
-  for(int i=0; i< SENSOR_COUNT; i++) {
+  for (int i = 0; i < SENSOR_COUNT; i++) {
     emg[i].init();
   }
-  myCSV.init();
 
+  myCSV.init();
   myCSV.setNumberofSensors(SENSORS_COUNT);
   // myCSV.setColHeaders("Bicep, Tricep");
   myCSV.exportCSVColHeaders();
-
   myCSV.startTimer();
 }
 
@@ -51,22 +50,13 @@ void loop() {
   /*------------start here-------------------*/
   runTime = micros();
 
-  for(int i=0; i< SENSOR_COUNT; i++) {
-    emg[i].readSensorData();
-  }
   myCSV.storeCurrentTime();
 
-  int value = Sensor1.readSensorData();
-
-  myCSV.storeSensorData(value);
-
+  for (int i = 0; i < SENSOR_COUNT; i++) {
+    int value = emg[i].readSensorData();
+    myCSV.storeSensorData(value);
+  }
   myCSV.exportDataRow();
-
-
-
-
-
-
 
   runTime = micros() - runTime;
 
