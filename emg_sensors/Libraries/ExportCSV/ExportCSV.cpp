@@ -43,6 +43,7 @@ void ExportCSV::setDefaultColHeaders()
 
 void ExportCSV::setColHeaders(char *cols)
 {
+    columnHeaders[0] = 0;
     strcat(columnHeaders, "Time, ");
     strcat(columnHeaders, cols);
 }
