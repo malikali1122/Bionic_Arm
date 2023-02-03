@@ -45,8 +45,6 @@
 
 #define TIMING_DEBUG 1
 
-#define SensorInputPin A0 // input pin number
-
 EMGFilters myFilter;
 
 // Constructor
@@ -81,10 +79,6 @@ void EMG_Sensor::init()
     // Initialise the filter
     myFilter.init(sampleRate, humFreq, true, true, true);
 
-    // setup for time cost measure
-    // using micros()
-    timeBudget = 1e6 / sampleRate;
-    // micros will overflow and auto return to zero every 70 minutes
 }
 
 // Set the threshold

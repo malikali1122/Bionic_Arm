@@ -20,9 +20,7 @@ class EMG_Sensor
     int threshold;
     int sampleRate;
     int humFreq;
-    char muscle[];
-    unsigned long timeStamp;
-    unsigned long timeBudget;
+    // char muscle[];
 
     EMGFilters myFilter;
 };
