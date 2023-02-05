@@ -6,9 +6,9 @@ void maintainOperatingFrequency() {
   // to do your work
   if (timeBudget > runTime) {
     delayMicroseconds(timeBudget - runTime);
-    digitalWrite(errorLED, LOW);
+    digitalWrite(ERROR_LED, LOW);
   } else {
-    digitalWrite(errorLED, HIGH);
+    digitalWrite(ERROR_LED, HIGH);
   }
   // else {
   //   // if more than timeBudget, the sample rate need to reduce to

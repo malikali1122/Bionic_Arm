@@ -2,14 +2,13 @@
 #include "EMGFilters.h"
 #include "ExportCSV.h"
 
-#define sensor1Pin A1
-#define sensor2Pin A2
-#define sensor3Pin A3
+#define SENSOR1_PIN A1
+#define SENSOR2_PIN A2
 
-#define errorLED 2
+#define ERROR_LED 13
 
 // Modify value according to number of sensors used
-#define SENSOR_COUNT 3
+#define SENSOR_COUNT 2
 
 // Set 0 if Timing o/p need not be printed
 #define TIMING_DEBUG 0
@@ -22,15 +21,15 @@ unsigned long timeBudget;
 // other sampleRate inputs will bypass all the EMG_FILTER
 int sampleRate = SAMPLE_FREQ_500HZ;
 
-EMG_Sensor emg[SENSOR_COUNT] = { EMG_Sensor(sensor1Pin, sampleRate), EMG_Sensor(sensor2Pin, sampleRate), EMG_Sensor(sensor3Pin, sampleRate) };
+EMG_Sensor emg[SENSOR_COUNT] = { EMG_Sensor(SENSOR1_PIN, sampleRate), EMG_Sensor(SENSOR2_PIN, sampleRate)};
 
 ExportCSV myCSV;
 
 void setup() {
   // open serial
-  Serial.begin(500000);
+  Serial.begin(115200);
 
-  pinMode(errorLED, OUTPUT);
+  pinMode(ERROR_LED, OUTPUT);
 
     // setup for time cost measure
     // using micros()
