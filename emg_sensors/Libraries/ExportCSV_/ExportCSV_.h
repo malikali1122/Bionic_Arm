@@ -9,7 +9,9 @@ class ExportCSV
 {
   public:
     ExportCSV();
-    void startTimer();
+    ExportCSV(int sensorCount);
+    void enableSerialPlotter();
+    void setStartTime();
     void setNumberofSensors(int num);
     void setColHeaders(char *cols);
     void exportCSVColHeaders();

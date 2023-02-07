@@ -5,9 +5,14 @@
 ExportCSV::ExportCSV() : numSensors(1), buffer(""), columnHeaders("Time"), sensorDataArr("") {}
 ExportCSV::ExportCSV(int sensorCount) : numSensors(sensorCount), buffer(""), columnHeaders("Time"), sensorDataArr("") {}
 
-void ExportCSV::startTimer()
+void ExportCSV::enableSerialPlotter()
 {
-    startTime = millis();
+    serialPlotterFlag = 1;
+}
+
+void ExportCSV::setupExportCSV(unsigned long startingTime)
+{
+    startTime = startingTime;
 }
 
 void ExportCSV::setNumberofSensors(int num)
