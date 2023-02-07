@@ -2,8 +2,8 @@
 #include "ExportCSV.h"
 
 // Constructor
-ExportCSV::ExportCSV() : numSensors(1), buffer(""), columnHeaders("Time"), sensorDataArr("") {}
-ExportCSV::ExportCSV(int sensorCount) : numSensors(sensorCount), buffer(""), columnHeaders("Time"), sensorDataArr("") {}
+ExportCSV::ExportCSV() : numSensors(1), buffer(""), columnHeaders(""), sensorDataArr("") {}
+ExportCSV::ExportCSV(int sensorCount) : numSensors(sensorCount), buffer(""), columnHeaders(""), sensorDataArr("") {}
 
 void ExportCSV::enableSerialPlotter()
 {
@@ -12,18 +12,26 @@ void ExportCSV::enableSerialPlotter()
 
 void ExportCSV::setupExportCSV(unsigned long startingTime)
 {
+    if (!serialPlotterFlag)
+    {
+        strcat(columnHeaders, "Time, ");
+    }
+    setDefaultColHeaders();
     startTime = startingTime;
 }
 
-void ExportCSV::setNumberofSensors(int num)
+void ExportCSV::setupExportCSV(unsigned long startingTime, char *cols)
 {
-    numSensors = num;
-    setDefaultColHeaders();
+    if (!serialPlotterFlag)
+    {
+        strcat(columnHeaders, "Time, ");
+    }
+    strcat(columnHeaders, cols);
+    startTime = startingTime;
 }
 
 void ExportCSV::setDefaultColHeaders()
 {
-    // strcat(columnHeaders, "Time, ");
     for (int i = 0; i < numSensors; i++)
     {
         if (i == (numSensors - 1))
@@ -39,13 +47,6 @@ void ExportCSV::setDefaultColHeaders()
     }
 }
 
-void ExportCSV::setColHeaders(char *cols)
-{
-    columnHeaders[0] = 0;
-    strcat(columnHeaders, "Time, ");
-    strcat(columnHeaders, cols);
-}
-
 void ExportCSV::exportCSVColHeaders()
 {
     Serial.println("");
@@ -54,9 +55,12 @@ void ExportCSV::exportCSVColHeaders()
 
 void ExportCSV::storeCurrentTime()
 {
-    ltoa(millis() - startTime, buffer, 10);
-    strcat(sensorDataArr, buffer);
-    strcat(sensorDataArr, ", ");
+    if (!serialPlotterFlag)
+    {
+        ltoa(millis() - startTime, buffer, 10);
+        strcat(sensorDataArr, buffer);
+        strcat(sensorDataArr, ", ");
+    }
 }
 
 void ExportCSV::storeSensorData(int sensorVal)

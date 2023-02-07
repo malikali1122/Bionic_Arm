@@ -11,9 +11,8 @@ class ExportCSV
     ExportCSV();
     ExportCSV(int sensorCount);
     void enableSerialPlotter();
-    void setStartTime();
-    void setNumberofSensors(int num);
-    void setColHeaders(char *cols);
+    void setupExportCSV(unsigned long startingTime);
+    void setupExportCSV(unsigned long startingTime, char *cols);
     void exportCSVColHeaders();
     void storeCurrentTime();
     void storeSensorData(int sensorData);
