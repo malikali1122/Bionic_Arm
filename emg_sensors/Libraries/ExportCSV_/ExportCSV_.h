@@ -5,11 +5,11 @@
 // include Arduino library
 #include "Arduino.h"
 
-class ExportCSV
+class ExportCSV_
 {
   public:
-    ExportCSV();
-    ExportCSV(int sensorCount);
+    ExportCSV_();
+    ExportCSV_(int sensorCount);
     void enableSerialPlotter();
     void setupExportCSV(unsigned long startingTime);
     void setupExportCSV(unsigned long startingTime, char *cols);
@@ -29,7 +29,7 @@ class ExportCSV
     char sensorDataArr[100];
 
     // Flag to Toggle between Serial Plotting and Putty CSV Export
-    int serialPlotterFlag = 0;
+    int serialPlotterFlag;
 
     // Private Functions
     void setDefaultColHeaders();

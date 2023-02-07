@@ -1,16 +1,16 @@
 #include "Arduino.h"
-#include "ExportCSV.h"
+#include "ExportCSV_.h"
 
 // Constructor
-ExportCSV::ExportCSV() : numSensors(1), buffer(""), columnHeaders(""), sensorDataArr("") {}
-ExportCSV::ExportCSV(int sensorCount) : numSensors(sensorCount), buffer(""), columnHeaders(""), sensorDataArr("") {}
+ExportCSV_::ExportCSV_() : numSensors(1), buffer(""), columnHeaders(""), sensorDataArr(""), serialPlotterFlag(0) {}
+ExportCSV_::ExportCSV_(int sensorCount) : numSensors(sensorCount), buffer(""), columnHeaders(""), sensorDataArr(""), serialPlotterFlag(0) {}
 
-void ExportCSV::enableSerialPlotter()
+void ExportCSV_::enableSerialPlotter()
 {
     serialPlotterFlag = 1;
 }
 
-void ExportCSV::setupExportCSV(unsigned long startingTime)
+void ExportCSV_::setupExportCSV(unsigned long startingTime)
 {
     if (!serialPlotterFlag)
     {
@@ -20,7 +20,7 @@ void ExportCSV::setupExportCSV(unsigned long startingTime)
     startTime = startingTime;
 }
 
-void ExportCSV::setupExportCSV(unsigned long startingTime, char *cols)
+void ExportCSV_::setupExportCSV(unsigned long startingTime, char *cols)
 {
     if (!serialPlotterFlag)
     {
@@ -30,7 +30,7 @@ void ExportCSV::setupExportCSV(unsigned long startingTime, char *cols)
     startTime = startingTime;
 }
 
-void ExportCSV::setDefaultColHeaders()
+void ExportCSV_::setDefaultColHeaders()
 {
     for (int i = 0; i < numSensors; i++)
     {
@@ -47,13 +47,13 @@ void ExportCSV::setDefaultColHeaders()
     }
 }
 
-void ExportCSV::exportCSVColHeaders()
+void ExportCSV_::exportCSVColHeaders()
 {
     Serial.println("");
     Serial.println(columnHeaders);
 }
 
-void ExportCSV::storeCurrentTime()
+void ExportCSV_::storeCurrentTime()
 {
     if (!serialPlotterFlag)
     {
@@ -63,13 +63,13 @@ void ExportCSV::storeCurrentTime()
     }
 }
 
-void ExportCSV::storeSensorData(int sensorVal)
+void ExportCSV_::storeSensorData(int sensorVal)
 {
     sprintf(buffer, "%d, ", sensorVal);
     strcat(sensorDataArr, buffer);
 }
 
-void ExportCSV::exportDataRow()
+void ExportCSV_::exportDataRow()
 {
     Serial.println(sensorDataArr);
     sensorDataArr[0] = 0;
