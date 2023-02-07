@@ -5,15 +5,6 @@
 ExportCSV::ExportCSV() : numSensors(1), buffer(""), columnHeaders("Time"), sensorDataArr("") {}
 ExportCSV::ExportCSV(int sensorCount) : numSensors(sensorCount), buffer(""), columnHeaders("Time"), sensorDataArr("") {}
 
-void ExportCSV::init()
-{
-    // numSensors = 1;
-
-    // buffer[0] = 0;
-    // columnHeaders[0] = 0;
-    // sensorDataArr[0] = 0;
-}
-
 void ExportCSV::startTimer()
 {
     startTime = millis();
