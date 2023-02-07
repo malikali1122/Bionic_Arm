@@ -21,19 +21,20 @@ unsigned long timeBudget;
 // other sampleRate inputs will bypass all the EMG_FILTER
 int sampleRate = SAMPLE_FREQ_500HZ;
 
-EMG_Sensor emg[SENSOR_COUNT] = { EMG_Sensor(SENSOR1_PIN, sampleRate), EMG_Sensor(SENSOR2_PIN, sampleRate)};
+EMG_Sensor emg[SENSOR_COUNT] = {EMG_Sensor(SENSOR1_PIN, sampleRate, 10), EMG_Sensor(SENSOR2_PIN, sampleRate, 10)};
 
 ExportCSV myCSV;
 
-void setup() {
+void setup()
+{
   // open serial
   Serial.begin(115200);
 
   pinMode(ERROR_LED, OUTPUT);
 
-    // setup for time cost measure
-    // using micros()
-    timeBudget = 1e6 / sampleRate;
+  // setup for time cost measure
+  // using micros()
+  timeBudget = 1e6 / sampleRate;
   // micros will overflow and auto return to zero every 70 minutes
 
   initialiseSensors();
@@ -45,7 +46,8 @@ void setup() {
   myCSV.startTimer();
 }
 
-void loop() {
+void loop()
+{
   /* add main program code here */
   /*------------start here-------------------*/
   runTime = micros();
