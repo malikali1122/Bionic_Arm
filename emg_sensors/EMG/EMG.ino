@@ -40,9 +40,13 @@ void setup() {
 
   myCSV.init();
   myCSV.setNumberofSensors(SENSOR_COUNT);
-  // myCSV.setColHeaders("Bicep, Tricep");
+  myCSV.setColHeaders("Trap_L, Trap_R");
   myCSV.exportCSVColHeaders();
   myCSV.startTimer();
+
+  	  // Set threshold
+  emg[0].setThreshold(0);
+  emg[1].setThreshold(0);
 }
 
 void loop() {
@@ -50,7 +54,7 @@ void loop() {
   /*------------start here-------------------*/
   runTime = micros();
 
-  myCSV.storeCurrentTime();
+  // myCSV.storeCurrentTime();
 
   streamSensorData();
 
