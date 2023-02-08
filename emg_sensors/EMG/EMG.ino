@@ -54,7 +54,7 @@ void loop() {
   /*------------start here-------------------*/
   runTime = micros();
 
-  // myCSV.storeCurrentTime();
+  myCSV.storeCurrentTime();
 
   streamSensorData();
 
