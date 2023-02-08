@@ -5,11 +5,11 @@
 // include Arduino library
 #include "Arduino.h"
 
-class ExportCSV_
+class ExportCSV
 {
   public:
-    ExportCSV_();
-    ExportCSV_(int sensorCount);
+    ExportCSV();
+    ExportCSV(int sensorCount);
     void enableSerialPlotter();
     void setupExportCSV(unsigned long startingTime);
     void setupExportCSV(unsigned long startingTime, char *cols);

@@ -2,15 +2,15 @@
 #include "ExportCSV_.h"
 
 // Constructor
-ExportCSV_::ExportCSV_() : numSensors(1), buffer(""), columnHeaders(""), sensorDataArr(""), serialPlotterFlag(0) {}
-ExportCSV_::ExportCSV_(int sensorCount) : numSensors(sensorCount), buffer(""), columnHeaders(""), sensorDataArr(""), serialPlotterFlag(0) {}
+ExportCSV::ExportCSV() : numSensors(1), buffer(""), columnHeaders(""), sensorDataArr(""), serialPlotterFlag(0) {}
+ExportCSV::ExportCSV(int sensorCount) : numSensors(sensorCount), buffer(""), columnHeaders(""), sensorDataArr(""), serialPlotterFlag(0) {}
 
-void ExportCSV_::enableSerialPlotter()
+void ExportCSV::enableSerialPlotter()
 {
     serialPlotterFlag = 1;
 }
 
-void ExportCSV_::setupExportCSV(unsigned long startingTime)
+void ExportCSV::setupExportCSV(unsigned long startingTime)
 {
     if (!serialPlotterFlag)
     {
@@ -20,7 +20,7 @@ void ExportCSV_::setupExportCSV(unsigned long startingTime)
     startTime = startingTime;
 }
 
-void ExportCSV_::setupExportCSV(unsigned long startingTime, char *cols)
+void ExportCSV::setupExportCSV(unsigned long startingTime, char *cols)
 {
     if (!serialPlotterFlag)
     {
@@ -30,7 +30,7 @@ void ExportCSV_::setupExportCSV(unsigned long startingTime, char *cols)
     startTime = startingTime;
 }
 
-void ExportCSV_::setDefaultColHeaders()
+void ExportCSV::setDefaultColHeaders()
 {
     for (int i = 0; i < numSensors; i++)
     {
@@ -47,13 +47,13 @@ void ExportCSV_::setDefaultColHeaders()
     }
 }
 
-void ExportCSV_::exportCSVColHeaders()
+void ExportCSV::exportCSVColHeaders()
 {
     Serial.println("");
     Serial.println(columnHeaders);
 }
 
-void ExportCSV_::storeCurrentTime()
+void ExportCSV::storeCurrentTime()
 {
     if (!serialPlotterFlag)
     {
@@ -63,13 +63,13 @@ void ExportCSV_::storeCurrentTime()
     }
 }
 
-void ExportCSV_::storeSensorData(int sensorVal)
+void ExportCSV::storeSensorData(int sensorVal)
 {
     sprintf(buffer, "%d, ", sensorVal);
     strcat(sensorDataArr, buffer);
 }
 
-void ExportCSV_::exportDataRow()
+void ExportCSV::exportDataRow()
 {
     Serial.println(sensorDataArr);
     sensorDataArr[0] = 0;

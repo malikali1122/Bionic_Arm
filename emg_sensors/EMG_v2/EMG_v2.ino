@@ -9,12 +9,15 @@
 
 // Modify value according to number of sensors used
 #define SENSOR_COUNT 2
+// Set 1 for Serial Plotting and 0 for Putty CSV Export
+int enableSerialPlot = 1;
 
 // Set 0 if Timing o/p need not be printed
 #define TIMING_DEBUG 0
 
 unsigned long runTime;
 unsigned long timeBudget;
+unsigned long startTime;
 
 // discrete filters must works with fixed sample frequence
 // our emg filter only support "SAMPLE_FREQ_500HZ" or "SAMPLE_FREQ_1000HZ"
@@ -23,8 +26,7 @@ int sampleRate = SAMPLE_FREQ_500HZ;
 
 EMG_Sensor emg[SENSOR_COUNT] = { EMG_Sensor(SENSOR1_PIN, sampleRate), EMG_Sensor(SENSOR2_PIN, sampleRate)};
 
-ExportCSV_ myCSV(SENSOR_COUNT);
-myCSV.enableSerialPlotter();  // Comment this line when using Putty CSV Export
+ExportCSV myCSV(SENSOR_COUNT);
 
 void setup() {
   // open serial
@@ -39,8 +41,13 @@ void setup() {
 
   initialiseSensors();
 
-  myCSV.setupExportCSV(millis());
-  // myCSV.setupExportCSV(millis(), "Bicep, Tricep");   // Use this function call instead to set specific column headers for sensors
+  if (enableSerialPlot){
+    myCSV.enableSerialPlotter();
+  }
+
+  startTime = millis();
+  myCSV.setupExportCSV(startTime);
+  // myCSV.setupExportCSV(startTime, "Bicep, Tricep");   // Use this function call instead to set specific column headers for sensors
   myCSV.exportCSVColHeaders();
 }
 
