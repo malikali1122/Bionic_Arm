@@ -38,24 +38,24 @@
 EMGFilters myFilter;
 
 // Constructor
-EMG_Sensor::EMG_Sensor(int sensorPin, int sampleRate) : // private variables
-                                                        sensorPin(sensorPin),
-                                                        sampleRate(sampleRate),
+EMG_Sensor::EMG_Sensor(int sensorPin, int sampleRate, int threshold) : // private variables
+                                                                       sensorPin(sensorPin),
+                                                                       sampleRate(sampleRate),
 
-                                                        // Calibration:
-                                                        // put on the sensors, and release your muscles;
-                                                        // wait a few seconds, and select the max value as the threshold;
-                                                        // any value under threshold will be set to zero
-                                                        threshold(0),
+                                                                       // Calibration:
+                                                                       // put on the sensors, and release your muscles;
+                                                                       // wait a few seconds, and select the max value as the threshold;
+                                                                       // any value under threshold will be set to zero
+                                                                       threshold(threshold),
 
-                                                        // For countries where power transmission is at 50 Hz
-                                                        // For countries where power transmission is at 60 Hz, need to change to
-                                                        // "NOTCH_FREQ_60HZ"
-                                                        // our emg filter only support 50Hz and 60Hz input
-                                                        // other inputs will bypass all the EMG_FILTER
-                                                        humFreq(NOTCH_FREQ_50HZ),
+                                                                       // For countries where power transmission is at 50 Hz
+                                                                       // For countries where power transmission is at 60 Hz, need to change to
+                                                                       // "NOTCH_FREQ_60HZ"
+                                                                       // our emg filter only support 50Hz and 60Hz input
+                                                                       // other inputs will bypass all the EMG_FILTER
+                                                                       humFreq(NOTCH_FREQ_50HZ),
 
-                                                        myFilter()
+                                                                       myFilter()
 {
 }
 
@@ -64,12 +64,6 @@ void EMG_Sensor::init()
 {
     // Initialise the filter
     myFilter.init(sampleRate, humFreq, true, true, true);
-}
-
-// Set the threshold
-void EMG_Sensor::setThreshold(int threshold)
-{
-    this->threshold = threshold;
 }
 
 // Read the sensor data
