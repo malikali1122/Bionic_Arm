@@ -9,10 +9,10 @@ class ExportCSV
 {
   public:
     ExportCSV();
-    void init();
-    void startTimer();
-    void setNumberofSensors(int num);
-    void setColHeaders(char *cols);
+    ExportCSV(int sensorCount);
+    void enableSerialPlotter();
+    void setupExportCSV(unsigned long startingTime);
+    void setupExportCSV(unsigned long startingTime, char *cols);
     void exportCSVColHeaders();
     void storeCurrentTime();
     void storeSensorData(int sensorData);
@@ -27,6 +27,9 @@ class ExportCSV
     char buffer[100];
     char columnHeaders[100];
     char sensorDataArr[100];
+
+    // Flag to Toggle between Serial Plotting and Putty CSV Export
+    int serialPlotterFlag;
 
     // Private Functions
     void setDefaultColHeaders();

@@ -2,50 +2,49 @@
 #include "ExportCSV.h"
 
 // Constructor
-ExportCSV::ExportCSV(){}
+ExportCSV::ExportCSV() : numSensors(1), buffer(""), columnHeaders(""), sensorDataArr(""), serialPlotterFlag(0) {}
+ExportCSV::ExportCSV(int sensorCount) : numSensors(sensorCount), buffer(""), columnHeaders(""), sensorDataArr(""), serialPlotterFlag(0) {}
 
-void ExportCSV::init()
+void ExportCSV::enableSerialPlotter()
 {
-    numSensors = 1;
-    buffer[0] = 0;
-    columnHeaders[0] = 0;
-    sensorDataArr[0] = 0;
+    serialPlotterFlag = 1;
 }
 
-void ExportCSV::startTimer()
+void ExportCSV::setupExportCSV(unsigned long startingTime)
 {
-    startTime = millis();
-}
-
-void ExportCSV::setNumberofSensors(int num)
-{
-    numSensors = num;
+    if (!serialPlotterFlag)
+    {
+        strcat(columnHeaders, "Time, ");
+    }
     setDefaultColHeaders();
+    startTime = startingTime;
+}
+
+void ExportCSV::setupExportCSV(unsigned long startingTime, char *cols)
+{
+    if (!serialPlotterFlag)
+    {
+        strcat(columnHeaders, "Time, ");
+    }
+    strcat(columnHeaders, cols);
+    startTime = startingTime;
 }
 
 void ExportCSV::setDefaultColHeaders()
 {
-    strcat(columnHeaders, "Time, ");
     for (int i = 0; i < numSensors; i++)
     {
         if (i == (numSensors - 1))
         {
-            sprintf(buffer, "Sensor%d", i+1);
+            sprintf(buffer, "Sensor%d", i + 1);
             strcat(columnHeaders, buffer);
         }
         else
         {
-            sprintf(buffer, "Sensor%d, ", i+1);
+            sprintf(buffer, "Sensor%d, ", i + 1);
             strcat(columnHeaders, buffer);
         }
     }
-}
-
-void ExportCSV::setColHeaders(char *cols)
-{
-    columnHeaders[0] = 0;
-    strcat(columnHeaders, "Time, ");
-    strcat(columnHeaders, cols);
 }
 
 void ExportCSV::exportCSVColHeaders()
@@ -56,9 +55,12 @@ void ExportCSV::exportCSVColHeaders()
 
 void ExportCSV::storeCurrentTime()
 {
-    ltoa(millis() - startTime, buffer, 10);
-    strcat(sensorDataArr, buffer);
-    strcat(sensorDataArr, ", ");
+    if (!serialPlotterFlag)
+    {
+        ltoa(millis() - startTime, buffer, 10);
+        strcat(sensorDataArr, buffer);
+        strcat(sensorDataArr, ", ");
+    }
 }
 
 void ExportCSV::storeSensorData(int sensorVal)
