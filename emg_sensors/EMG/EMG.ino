@@ -40,7 +40,7 @@ void setup() {
 
   myCSV.init();
   myCSV.setNumberofSensors(SENSOR_COUNT);
-  myCSV.setColHeaders("Trap_L, Trap_R");
+  myCSV.setColHeaders("Trap_L, Pec_L");
   myCSV.exportCSVColHeaders();
   myCSV.startTimer();
 
