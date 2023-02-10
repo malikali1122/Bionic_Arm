@@ -8,20 +8,24 @@ import matplotlib.pyplot as plt
 ser = serial.Serial('COM14', 115200, timeout=1)
 time.sleep(2)
 
+print("Starting to read data from Arduino...")
+
 data = []
 for i in range(500):
     line = ser.readline()   # read a byte string
     if line:
-        string = line.decode()  # convert the byte string to a unicode string
-        num = string
+        # string = line.decode()  # convert the byte string to a unicode string
+        num = line
         # num = int(string) # convert the unicode string to an int
         print(num)
         data.append(num) # add int to data list
 ser.close()
+
+print("Finished reading data from Arduino...")
 
 # build the plot
 plt.plot(data)
 plt.xlabel('Time')
 plt.ylabel('Potentiometer Reading')
 plt.title('Potentiometer Reading vs. Time')
-plt.show()
+# plt.show()

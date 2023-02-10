@@ -28,6 +28,7 @@ void setup()
 {
   // open serial
   Serial.begin(115200);
+  Serial.print("<Arduino is ready>"); 
 
   pinMode(ERROR_LED, OUTPUT);
 
