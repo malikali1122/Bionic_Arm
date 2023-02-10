@@ -8,8 +8,7 @@
 
 **Add python to PATH:**
 
- - Locate python executable and copy its path. (eg: 
-C:\Users\<USER>\AppData\Local\Programs\Python )
+ - Locate python executable and copy its path. (eg: C:\Users\<USER>\AppData\Local\Programs\Python )
 - Search 'edit environment variables' in the start menu and click the 'Environment Variables' tab in the pop up.
 - Double click the 'path' entry in the 'User variables' section
 - Paste the path to the executable in the new pop window.
