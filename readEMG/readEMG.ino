@@ -1,6 +1,5 @@
 #include "EMG_Sensor.h"
 #include "EMGFilters.h"
-#include "ExportCSV.h"
 
 #define SENSOR1_PIN A1
 #define SENSOR2_PIN A2
@@ -17,7 +16,6 @@ int enableSerialPlot = 1;
 
 unsigned long runTime;
 unsigned long timeBudget;
-unsigned long startTime;
 
 // discrete filters must works with fixed sample frequence
 // our emg filter only support "SAMPLE_FREQ_500HZ" or "SAMPLE_FREQ_1000HZ"
@@ -41,15 +39,6 @@ void setup()
   // micros will overflow and auto return to zero every 70 minutes
 
   initialiseSensors();
-
-  if (enableSerialPlot){
-    myCSV.enableSerialPlotter();
-  }
-
-  startTime = millis();
-  myCSV.setupExportCSV(startTime);
-  // myCSV.setupExportCSV(startTime, "Bicep, Tricep");   // Use this function call instead to set specific column headers for sensors
-  myCSV.exportCSVColHeaders();
 }
 
 void loop()
@@ -58,13 +47,12 @@ void loop()
   /*------------start here-------------------*/
   runTime = micros();
 
-  myCSV.storeCurrentTime();
-
   streamSensorData();
 
   runTime = micros() - runTime;
 
-  timingDebug();
+  if(TIMING_DEBUG)
+    timingDebug();
 
   /*------------end here---------------------*/
 

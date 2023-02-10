@@ -9,7 +9,7 @@ void initialiseSensors() {
 void streamSensorData() {
   for (int i = 0; i < SENSOR_COUNT; i++) {
     int value = emg[i].readSensorData();
-    myCSV.storeSensorData(value);
+    Serial.print(value);
   }
-  myCSV.exportDataRow();
+  Serial.println();
 }
