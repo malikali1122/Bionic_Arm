@@ -24,8 +24,6 @@ int sampleRate = SAMPLE_FREQ_500HZ;
 
 EMG_Sensor emg[SENSOR_COUNT] = {EMG_Sensor(SENSOR1_PIN, sampleRate, 10), EMG_Sensor(SENSOR2_PIN, sampleRate, 10)};
 
-ExportCSV myCSV(SENSOR_COUNT);
-
 void setup()
 {
   // open serial
