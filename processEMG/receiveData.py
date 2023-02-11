@@ -3,6 +3,8 @@
 import time
 import serial
 import serial.tools.list_ports
+import csv
+from pathlib import Path
 
 #
 # Find the USB port we are on
@@ -45,18 +47,35 @@ def wait_for_arduino(device):
 device = open_serial_port()
 wait_for_arduino(device)
 
+# open the file in the write mode
+fileName = "test.csv"
+filePath = Path("../Data/Test")/fileName
+f = open(filePath, 'w')
+# create the csv writer
+writer = csv.writer(f)
+
+row=[]
+
 while (True):
     if device.isOpen():
 
         try:
-            input_data = device.readline()
-            s1 = input_data.strip().decode("utf-8")
-            print(s1)
+            sensor_val = device.readline().strip().decode("utf-8")
+
+            # sensor_val is a string. 
+            # If it is empty, we have reached the end of a row -> write to file
+            # else, append to row
+            if not sensor_val:
+                writer.writerow(row)
+                row = []
+            else:
+                row.append(sensor_val)
+
         except UnicodeDecodeError as e:
             print("ERROR")
             print(e)
-            print(input_data)
         except KeyboardInterrupt:
             print("\nStopping read from Arduino...")
             device.close()
+            f.close()
             exit(0)
