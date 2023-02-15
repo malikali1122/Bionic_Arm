@@ -32,4 +32,4 @@ def get_port():
 # open serial port
 def open_serial_port():
     port = get_port()
-    return serial.Serial(port, 115200, timeout=1)
+    return serial.Serial(port, 115200, timeout=10)
