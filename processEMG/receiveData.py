@@ -1,81 +1,42 @@
 #!/usr/bin/env python
 
-import time
-import serial
-import serial.tools.list_ports
 import csv
+import stopwatch
 from pathlib import Path
 
-#
-# Find the USB port we are on
-#
-def get_port():
-    commports = serial.tools.list_ports.comports()  # get possible ports
-    numPorts = len(commports)
-    if (numPorts == 0):
-        print("No serial ports available\n\n")
-        exit()
-    if (numPorts > 1):
-        # Have user pick one
-        portNum = 0
-        for port in commports:
-            print("port number ", portNum)
-            print(port)
-            portNum = portNum+1
-        usePort = int(input('enter port number to use 0-'+str(numPorts-1)+':'))
-    else:
-        usePort = 0
-
-    thePort = commports[usePort][0]
-    print('using ', thePort, '\n')
-    
-    return thePort
-
-# open serial port
-def open_serial_port():
-    port = get_port()
-    return serial.Serial(port, 115200, timeout=1)
-
-# wait for arduino to be ready
-# Ignore all previous data read
-def wait_for_arduino(device):
-    start_signal = "<Arduino is ready>".encode()
-    device.read_until(start_signal)
-    print("Reading Data from Arduino...")
-
-
-device = open_serial_port()
-wait_for_arduino(device)
-
 # open the file in the write mode
-fileName = "test.csv"
-filePath = Path("../Data/Test")/fileName
-f = open(filePath, 'w')
-# create the csv writer
-writer = csv.writer(f)
+def open_csv_file():
+    fileName = "test.csv"
+    filePath = Path("Data/Test")/fileName
+    f = open(filePath, 'w')
+    # create the csv writer
+    writer = csv.writer(f)
+    return f, writer
 
-row=[]
 
-while (True):
-    if device.isOpen():
+# Global variable to store the row of data
+row = []
 
+# Write the emg reading to the csv file
+# emg_reading is a string.
+# If it is empty, we have reached the end of a row -> write to file
+# else, append to row
+def write_to_csv_file(writer, emg_reading):
+    global row
+    if not emg_reading:
+        row.insert(0, stopwatch.get_elapsed_time())
+        writer.writerow(row)
+        row = []
+    else:
+        row.append(emg_reading)
+
+
+# Read the serial data from arduino
+def read_serial_data(arduino):
+    if arduino.isOpen():
         try:
-            sensor_val = device.readline().strip().decode("utf-8")
-
-            # sensor_val is a string. 
-            # If it is empty, we have reached the end of a row -> write to file
-            # else, append to row
-            if not sensor_val:
-                writer.writerow(row)
-                row = []
-            else:
-                row.append(sensor_val)
+            return arduino.readline().strip().decode("utf-8")
 
         except UnicodeDecodeError as e:
             print("ERROR")
             print(e)
-        except KeyboardInterrupt:
-            print("\nStopping read from Arduino...")
-            device.close()
-            f.close()
-            exit(0)
