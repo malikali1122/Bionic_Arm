@@ -5,6 +5,11 @@ import serial
 import serial.tools.list_ports
 import csv
 from pathlib import Path
+import datetime as dt
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+
+emg_values = [0, 0]
 
 #
 # Find the USB port we are on
@@ -43,6 +48,41 @@ def wait_for_arduino(device):
     device.read_until(start_signal)
     print("Reading Data from Arduino...")
 
+# ************** PLOTTING DATA ***************** #
+
+# Create figure for plotting
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1)
+xs = []
+ys = []
+
+# This function is called periodically from FuncAnimation
+def animate(i, xs, ys):
+    # Add x and y to lists
+    xs.append(dt.datetime.now().strftime('%H:%M:%S.%f'))
+    ys.append(emg_values[0])
+
+    # Limit x and y lists to 20 items
+    xs = xs[-20:]
+    ys = ys[-20:]
+
+    # Draw x and y lists
+    ax.clear()
+    ax.plot(xs, ys)
+
+    # Format plot
+    plt.xticks(rotation=45, ha='right')
+    plt.subplots_adjust(bottom=0.30)
+    plt.title('EMG Readings')
+    plt.ylabel('EMG Value')
+
+# Set up plot to call animate() function periodically
+# ani = animation.FuncAnimation(fig, animate, fargs=(xs, ys), interval=200)
+# plt.show()
+
+
+# ************** RECEIVING DATA ***************** #
+
 
 device = open_serial_port()
 wait_for_arduino(device)
@@ -70,6 +110,8 @@ while (True):
                 row = []
             else:
                 row.append(sensor_val)
+                emg_values = [int(emg_val) for emg_val in sensor_val.split(',')]
+                print(sensor_val)
 
         except UnicodeDecodeError as e:
             print("ERROR")
