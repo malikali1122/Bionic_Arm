@@ -1,20 +1,8 @@
 #!/usr/bin/env python
 
 import csv
-import time
+import stopwatch
 from pathlib import Path
-
-
-# wait for arduino to be ready
-# Ignore all previous data read
-def wait_for_arduino(arduino):
-    start_signal = "<Arduino is ready>".encode()
-    x = arduino.read_until(start_signal)
-    print(x)
-    print("Reading Data from Arduino...")
-
-# # ************** PLOTTING DATA ***************** #
-
 
 # open the file in the write mode
 def open_csv_file():
@@ -30,16 +18,14 @@ def open_csv_file():
 row = []
 
 # Write the emg reading to the csv file
-
-
+# emg_reading is a string.
+# If it is empty, we have reached the end of a row -> write to file
+# else, append to row
 def write_to_csv_file(writer, emg_reading):
-    # emg_reading is a string.
-    # If it is empty, we have reached the end of a row -> write to file
-    # else, append to row
+    global row
     if not emg_reading:
-        global row
+        row.insert(0, stopwatch.get_elapsed_time())
         writer.writerow(row)
-        print(row)
         row = []
     else:
         row.append(emg_reading)

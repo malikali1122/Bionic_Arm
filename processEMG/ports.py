@@ -26,10 +26,20 @@ def get_port():
 
     thePort = commports[usePort][0]
     print('using ', thePort, '\n')
-    
+
     return thePort
 
 # open serial port
+
+
 def open_serial_port():
     port = get_port()
-    return serial.Serial(port, 115200, timeout=10)
+    return serial.Serial(port, 500000, timeout=10)
+
+
+# wait for arduino to be ready
+# Ignore all previous data read
+def wait_for_arduino(arduino):
+    start_signal = "<Arduino is ready>".encode()
+    arduino.read_until(start_signal)
+    print("Reading Data from Arduino...")

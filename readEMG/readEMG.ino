@@ -27,7 +27,7 @@ EMG_Sensor emg[SENSOR_COUNT] = {EMG_Sensor(SENSOR1_PIN, sampleRate, 10), EMG_Sen
 void setup()
 {
   // open serial
-  Serial.begin(115200);
+  Serial.begin(500000);
   Serial.print("<Arduino is ready>"); 
 
   pinMode(ERROR_LED, OUTPUT);
