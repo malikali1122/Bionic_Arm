@@ -1,6 +1,5 @@
 #include "EMG_Sensor.h"
 #include "EMGFilters.h"
-#include "ExportCSV.h"
 
 #define SENSOR1_PIN A1
 #define SENSOR2_PIN A2
@@ -17,7 +16,6 @@ int enableSerialPlot = 1;
 
 unsigned long runTime;
 unsigned long timeBudget;
-unsigned long startTime;
 
 int envelopeIndex1 = 0;
 int valueArray1;
@@ -53,13 +51,11 @@ int sampleRate = SAMPLE_FREQ_500HZ;
 
 EMG_Sensor emg[SENSOR_COUNT] = {EMG_Sensor(SENSOR1_PIN, sampleRate, 10), EMG_Sensor(SENSOR2_PIN, sampleRate, 10)};
 
-
-ExportCSV myCSV(SENSOR_COUNT);
-
 void setup()
 {
   // open serial
-  Serial.begin(115200);
+  Serial.begin(500000);
+  Serial.print("<Arduino is ready>"); 
 
   pinMode(ERROR_LED, OUTPUT);
   pinMode(LED_BUILTIN,OUTPUT);
@@ -74,15 +70,6 @@ void setup()
   // micros will overflow and auto return to zero every 70 minutes
 
   initialiseSensors();
-
-  if (enableSerialPlot){
-    myCSV.enableSerialPlotter();
-  }
-
-  startTime = millis();
-  // myCSV.setupExportCSV(startTime);
-  myCSV.setupExportCSV(startTime, "Gesture ID");   // Use this function call instead to set specific column headers for sensors
-  myCSV.exportCSVColHeaders();
 }
 
 void loop()
@@ -91,7 +78,6 @@ void loop()
   /*------------start here-------------------*/
   runTime = micros();
 
-  myCSV.storeCurrentTime();
 
   temp1 = streamSensorData(1);
   temp2 = streamSensorData(2);
@@ -118,6 +104,7 @@ void loop()
   if(digitalRead(5)==HIGH){
     gestureID = 4;
   }
+  streamSensorData();
 
   if(envelopeVal1 == 1){
     Serial.println(gestureID); // Only print the gesture ID upon completion of gesture
@@ -129,7 +116,8 @@ void loop()
   
   runTime = micros() - runTime;
 
-  timingDebug();
+  if(TIMING_DEBUG)
+    timingDebug();
 
   /*------------end here---------------------*/
 
