@@ -6,10 +6,15 @@ void initialiseSensors() {
 }
 
 // Stream the 
-void streamSensorData() {
+int streamSensorData(int SENSOR_ID) {
+  int temp[SENSOR_COUNT];
   for (int i = 0; i < SENSOR_COUNT; i++) {
     int value = emg[i].readSensorData();
-    myCSV.storeSensorData(value);
+    //myCSV.storeSensorData(value); temporarily commented!!!
+    temp[i] = value;
   }
-  myCSV.exportDataRow();
+  
+ // myCSV.exportDataRow(); temporarily commented!!
+ 
+  return temp[SENSOR_ID-1];
 }
