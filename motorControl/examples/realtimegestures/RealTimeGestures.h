@@ -105,7 +105,6 @@ class RealTimeGestures {
             }
             handServoArr[i].write(handState[i]);
           }
-          Serial.println(handState[0]);
           handMovesRemaining--;
           isDelayingHand = true;
         }

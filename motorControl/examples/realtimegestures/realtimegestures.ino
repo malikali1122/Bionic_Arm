@@ -34,13 +34,11 @@ void setup(){
   srvArrHand[2].write(180);
   srvArrHand[3].write(180);
   srvArrHand[4].write(180);
-  delay(5900);
+  delay(1000);
 }
 
 void loop() {
   loopStartTime = micros();
-  
-
   (*gesturesPtr).periodicUpdate();
   if (Serial.available() > 0) {
     char input = Serial.read();
