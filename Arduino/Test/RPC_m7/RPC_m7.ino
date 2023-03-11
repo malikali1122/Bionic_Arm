@@ -19,10 +19,7 @@ void setup()
   // Initialize RPC library; this also boots the M4 core
   RPC.begin();
   Serial.begin(115200);
-  // while (!Serial) {} // Uncomment this to wait until the Serial connection is ready
-
-  // Both CPUs will execute this instruction, just at different times
-  randomSeed(analogRead(A0)); // Initializes the pseudo-random number generator
+  while (!Serial) {} // Wait until the Serial connection is ready
 
   // M7 CPU becomes the server, so it makes two functions available under the defined names
   RPC.bind("remoteAdd", add);
