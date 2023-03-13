@@ -261,7 +261,7 @@ int envelope(long temp1, long temp2){
 
       currentTime1 = millis(); // Recording the current elapsed time
       if((currentTime1 - eventStartTime1)>=durationThreshold1*1.5){ // Event been going on for a significant time
-        Serial.print("Channel 1: Long event in progress...");
+        Serial.print(1);
         Serial.println(",");
       }
 
@@ -289,12 +289,12 @@ int envelope(long temp1, long temp2){
 
     if(eventDuration1<=durationThreshold1){ // Under the time threshold for a short signal
       if(eventArea1<=intensityThreshold1){ // Here we know channel 1, duration short, intensity low.
-        Serial.print("Channel 1: Short Duration: Low Intensity Spike");
+        Serial.print(2);
         Serial.println(",");
 
       }
       else if(eventArea1>intensityThreshold1){ // Here we know channel 1, duration is short, intensity high
-        Serial.print("Channel 1: Short Duration: High Intensity Spike");
+        Serial.print(3);
         Serial.println(",");
       }
     }
@@ -341,7 +341,7 @@ int envelope(long temp1, long temp2){
 
       currentTime2 = millis(); // Recording the current elapsed time
       if((currentTime2 - eventStartTime2)>=durationThreshold2*1.5){ // Event been going on for a significant time
-        Serial.print("Channel 2: Long event in progress...");
+        Serial.print(4);
         Serial.println(",");
       }
 
@@ -370,12 +370,12 @@ int envelope(long temp1, long temp2){
 
     if(eventDuration2<=durationThreshold2){ // Under the time threshold for a short signal
       if(eventArea2<=intensityThreshold2){ // Here we know channel 2, duration short, intensity low.
-        Serial.print("Channel 2: Short Duration: Low Intensity Spike");
+        Serial.print(5);
         Serial.println(",");
 
       }
       else if(eventArea2>intensityThreshold2){ // Here we know channel 2, duration is short, intensity high
-        Serial.print("Channel 2: Short Duration: High Intensity Spike");
+        Serial.print(6);
         Serial.println(",");
       }
     }
