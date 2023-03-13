@@ -12,10 +12,25 @@ void initialiseSensors() {
   => Using println function so that each sensor value is received 
   seperately
 */
-void streamSensorData() {
-  for (int i = 0; i < SENSOR_COUNT; i++) {
-    int value = emg[i].readSensorData();
-    Serial.println(value);
-  }
-  Serial.println();
+
+// Temporarily commented!!!!!!!
+
+// void streamSensorData() {
+//   for (int i = 0; i < SENSOR_COUNT; i++) {
+//     int value = emg[i].readSensorData();
+//     Serial.println(value);
+//   }
+//   Serial.println();
+// }
+
+// DEV: change as required
+
+int streamSensorData(int SENSOR_ID) {
+  
+  int value = emg[SENSOR_ID].readSensorData();
+  //myCSV.storeSensorData(value); temporarily commented!!!
+
+ // myCSV.exportDataRow(); temporarily commented!!
+ 
+  return value;
 }
