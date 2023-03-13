@@ -62,7 +62,7 @@ int channelID = 1; // Default value for channel selection
 // discrete filters must works with fixed sample frequence
 // our emg filter only support "SAMPLE_FREQ_500HZ" or "SAMPLE_FREQ_1000HZ"
 // other sampleRate inputs will bypass all the EMG_FILTER
-int sampleRate = SAMPLE_FREQ_500HZ;
+SAMPLE_FREQUENCY sampleRate = SAMPLE_FREQ_500HZ;
 
 EMG_Sensor emg[SENSOR_COUNT] = {EMG_Sensor(SENSOR1_PIN, sampleRate, 10), EMG_Sensor(SENSOR2_PIN, sampleRate, 10)};
 

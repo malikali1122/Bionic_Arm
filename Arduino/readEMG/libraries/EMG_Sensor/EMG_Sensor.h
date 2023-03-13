@@ -10,15 +10,15 @@
 class EMG_Sensor
 {
   public:
-    EMG_Sensor(int sensorPin, int sampleRate, int threshold);
+    EMG_Sensor(int sensorPin, SAMPLE_FREQUENCY sampleRate, int threshold);
     void init();
     int readSensorData();
 
   private:
     int sensorPin;
     int threshold;
-    int sampleRate;
-    int humFreq;
+    SAMPLE_FREQUENCY sampleRate;
+    NOTCH_FREQUENCY humFreq;
     // char muscle[];
 
     EMGFilters myFilter;

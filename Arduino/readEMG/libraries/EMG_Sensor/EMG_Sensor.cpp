@@ -38,7 +38,7 @@
 EMGFilters myFilter;
 
 // Constructor
-EMG_Sensor::EMG_Sensor(int sensorPin, int sampleRate, int threshold) : // private variables
+EMG_Sensor::EMG_Sensor(int sensorPin, SAMPLE_FREQUENCY sampleRate, int threshold) : // private variables
                                                                        sensorPin(sensorPin),
                                                                        sampleRate(sampleRate),
 
