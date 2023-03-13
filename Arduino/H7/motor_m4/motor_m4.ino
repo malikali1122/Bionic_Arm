@@ -6,7 +6,7 @@ int controlSignal = 0;
 /* Update the control signal */
 void updateControl(int newControlSignal)
 {
-  Serial.println("M4: executing updateControl with " + String(newControlSignal));
+  RPC.println("M4: executing updateControl with " + String(newControlSignal));
   controlSignal = newControlSignal;
 }
 

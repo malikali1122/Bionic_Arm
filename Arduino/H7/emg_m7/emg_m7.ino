@@ -21,6 +21,11 @@ void loop()
   // DEV: Add emg loop code here
   // int controlSignal = [get the new control signal]
 
+  // DEV: Test code
+  delay(1000);
+  int controlSignal = prevControlSignal + 1;
+  // Test code ends
+
   updateControlSignal(controlSignal);
 
   if (PRINT_RPC_STREAM)
@@ -33,12 +38,9 @@ void updateControlSignal(int controlSignal)
 {
   if (prevControlSignal != controlSignal)
   {
-    // DEV: Check if this function works
-    RPC.callNonblocking("updateControl", controlSignal);
-    // RPC.callAsync("updateControl", controlSignal);
-    
-    // DEV: Fallback
-    // RPC.call("updateControl", controlSignal);
+    // DEV: Check if there is a version of non-blocking RPC call
+    RPC.call("updateControl", controlSignal);
+    Serial.println("M7: executing updateControl with " + String(controlSignal));
     prevControlSignal = controlSignal;
   }
 }
