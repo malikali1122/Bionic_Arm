@@ -1,8 +1,8 @@
 #include "EMG_Sensor.h"
 #include "EMGFilters.h"
 
-#define SENSOR1_PIN A1
-#define SENSOR2_PIN A2
+#define SENSOR1_PIN A0
+#define SENSOR2_PIN A1
 
 #define ERROR_LED 13
 
