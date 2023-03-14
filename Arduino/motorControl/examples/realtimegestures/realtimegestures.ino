@@ -57,10 +57,10 @@ void loop() {
   if (Serial.available() > 0) {
     char input = Serial.read();
     switch(input) {
-      case '1':
+      case '3':
         (*gesturesPtr).toggleFist();
         break;
-      case '2':
+      case '6':
         (*gesturesPtr).toggleElbow();
         break;
       default:
