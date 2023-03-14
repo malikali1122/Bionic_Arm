@@ -1,76 +1,5 @@
-#include "EMG_Sensor.h"
-#include "EMGFilters.h"
-
-#define SENSOR1_PIN A1
-#define SENSOR2_PIN A2
-
-#define ERROR_LED 13
-
-// Modify value according to number of sensors used
-#define SENSOR_COUNT 2
-// Set 1 for Serial Plotting and 0 for Putty CSV Export
-int enableSerialPlot = 1;
-
-// Set 0 if Timing o/p need not be printed
-#define TIMING_DEBUG 0
-
-unsigned long runTime;
-unsigned long timeBudget;
-
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// START OF TUNING PARAMETERS
-
-const long intensityThreshold1 = 10000; // Threshold for hard-coded determination of low or high intensity
-const long intensityThreshold2 = 10000;
-
-const long durationThreshold1 = 900; // Threshold (ms) for the distinction between short and long signal
-const long durationThreshold2 = 900;
-
-const int averageLength = 1000; // Constant (need tuning?)
-const int envelopeReach = 100; // May need tuning!!
-
-// END OF TUNING PARAMETERS
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-int envelopeIndex1 = 0;
-int valueArray1;
-int temp1 = 0; 
-int temp2 = 0; 
-long averageVal1 = 0;
-long envelopeVal = 0;
-int signalReadings1[envelopeReach];
-int eventFlag1 = 0; // Toggle between 0 and 1 if the envelope rises above 0 or falls back to 0 (start and end flag)
-long eventArea1 = 0; // Variable to track the intensity (cumulative) as an event occurs
-long eventStartTime1 = 0; // Variable to record the start time for any one event
-long eventStopTime1 = 0; // Variable to record the stop time for any one event
-long previousEnvelope1 = 0;
-int gestureID = 0; // Initial state for the gesture identifier
-
-long averageVal2 = 0;
-int envelopeIndex2 = 0;
-int signalReadings2[envelopeReach];
-int eventFlag2 = 0; // Toggle between 0 and 1 if the envelope rises above 0 or falls back to 0 (start and end flag)
-long eventArea2 = 0; // Variable to track the intensity (cumulative) as an event occurs
-long eventStartTime2 = 0; // Variable to record the start time for any one event
-long eventStopTime2 = 0; // Variable to record the stop time for any one event
-long previousEnvelope2 = 0;
-
-int channelID = 1; // Default value for channel selection
-
-
-// discrete filters must works with fixed sample frequence
-// our emg filter only support "SAMPLE_FREQ_500HZ" or "SAMPLE_FREQ_1000HZ"
-// other sampleRate inputs will bypass all the EMG_FILTER
-SAMPLE_FREQUENCY sampleRate = SAMPLE_FREQ_500HZ;
-
-EMG_Sensor emg[SENSOR_COUNT] = {EMG_Sensor(SENSOR1_PIN, sampleRate, 10), EMG_Sensor(SENSOR2_PIN, sampleRate, 10)};
-
-void setup()
+void emgSetup()
 {
-  // open serial
-  Serial.begin(500000);
-  //Serial.println("<Arduino is ready>");
 
   pinMode(ERROR_LED, OUTPUT);
   pinMode(LED_BUILTIN,OUTPUT);
@@ -89,7 +18,7 @@ void setup()
   initialiseSensors();
 }
 
-void loop()
+int getControlSignal()
 {
   /* add main program code here */
   /*------------start here-------------------*/
@@ -172,6 +101,8 @@ void loop()
   // matches the sampling rate
 
   maintainOperatingFrequency();
+
+  return envelopeVal;
 }
 
 long smoothing(int temp1, int sensorChannel){
@@ -229,6 +160,8 @@ int envelope(long temp1, long temp2){
   int currentReading2=0;
   long currentTime2 = 0;
 
+  int controlSig=0;
+
 
   int printFlagCombination = 0;
   
@@ -258,11 +191,11 @@ int envelope(long temp1, long temp2){
   // CHANNEL 1: DURING AN EVENT
   if((eventFlag1 == 1)&&(envelopePeakValue1 > 0)){ // If the envelope is above zero (and during an event)
       eventArea1 = eventArea1 + (envelopePeakValue1*envelopePeakValue1); // Adding on the squared envelope value
-
+      //Serial.println(envelopePeakValue1);
       currentTime1 = millis(); // Recording the current elapsed time
       if((currentTime1 - eventStartTime1)>=durationThreshold1*1.5){ // Event been going on for a significant time
-        Serial.print(1);
-        Serial.println(",");
+        //Serial.println(1);
+        
       }
 
   }
@@ -286,16 +219,16 @@ int envelope(long temp1, long temp2){
     //Serial.print("Duration:");
     //Serial.print(eventDuration1);
     //Serial.print(",");
-
+   //Serial.println(eventArea1);
     if(eventDuration1<=durationThreshold1){ // Under the time threshold for a short signal
       if(eventArea1<=intensityThreshold1){ // Here we know channel 1, duration short, intensity low.
-        Serial.print(2);
-        Serial.println(",");
+        //Serial.println(2);
+        
 
       }
       else if(eventArea1>intensityThreshold1){ // Here we know channel 1, duration is short, intensity high
-        Serial.print(3);
-        Serial.println(",");
+        Serial.println(3);
+        controlSig=3;
       }
     }
 
@@ -338,11 +271,11 @@ int envelope(long temp1, long temp2){
   // CHANNEL 2: DURING AN EVENT
   if((eventFlag2 == 1)&&(envelopePeakValue2 > 0)){ // If the envelope is above zero (and during an event)
       eventArea2 = eventArea2 + (envelopePeakValue2*envelopePeakValue2); // Adding on the squared envelope value
-
+      //Serial.println(eventArea2);
       currentTime2 = millis(); // Recording the current elapsed time
       if((currentTime2 - eventStartTime2)>=durationThreshold2*1.5){ // Event been going on for a significant time
-        Serial.print(4);
-        Serial.println(",");
+        //Serial.println(4);
+        
       }
 
   }
@@ -368,15 +301,16 @@ int envelope(long temp1, long temp2){
     //Serial.print(eventDuration2);
     //Serial.print(",");
 
+    //Serial.println(eventArea2);
     if(eventDuration2<=durationThreshold2){ // Under the time threshold for a short signal
       if(eventArea2<=intensityThreshold2){ // Here we know channel 2, duration short, intensity low.
-        Serial.print(5);
-        Serial.println(",");
+        //Serial.println(5);
+        
 
       }
       else if(eventArea2>intensityThreshold2){ // Here we know channel 2, duration is short, intensity high
-        Serial.print(6);
-        Serial.println(",");
+        Serial.println(6);
+        controlSig=6;
       }
     }
 
@@ -391,9 +325,9 @@ int envelope(long temp1, long temp2){
   previousEnvelope2 = envelopePeakValue2;
   envelopePeakValue2 = 0; // Set the current best back to zero ready for the next function call
 
-  printFlagCombination = printFlag1+printFlag2;
+  //printFlagCombination = printFlag1+printFlag2;
 
-  return printFlagCombination;
+  return controlSig;
     
 
 }
