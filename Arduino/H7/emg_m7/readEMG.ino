@@ -227,7 +227,7 @@ int envelope(long temp1, long temp2){
 
       }
       else if(eventArea1>intensityThreshold1){ // Here we know channel 1, duration is short, intensity high
-        //Serial.println(3);
+        Serial.println(3);
         controlSig=3;
       }
     }
@@ -309,7 +309,7 @@ int envelope(long temp1, long temp2){
 
       }
       else if(eventArea2>intensityThreshold2){ // Here we know channel 2, duration is short, intensity high
-        //Serial.println(6);
+        Serial.println(6);
         controlSig=6;
       }
     }

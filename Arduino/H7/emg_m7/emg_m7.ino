@@ -102,14 +102,17 @@ void loop()
 // and also update in M7
 void updateControlSignal(int controlSignal)
 {
-  if (prevControlSignal != controlSignal)
-  {
+  
     RPC.send("updateControl", controlSignal);
-    // DEV: Fallback to RPC.call if RPC.send doesn't work
-    // RPC.call("updateControl", controlSignal);
-    Serial.println("M7: executing updateControl with " + String(controlSignal));
-    prevControlSignal = controlSignal;
-  }
+
+  // if (prevControlSignal != controlSignal)
+  // {
+  //   RPC.send("updateControl", controlSignal);
+  //   // DEV: Fallback to RPC.call if RPC.send doesn't work
+  //   // RPC.call("updateControl", controlSignal);
+  //   Serial.println("M7: executing updateControl with " + String(controlSignal));
+  //   prevControlSignal = controlSignal;
+  // }
 }
 
 /**

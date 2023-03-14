@@ -53,5 +53,6 @@ void loop()
 {
   // DEV: Add motor loop code here
   // use controlSignal for switch case
+  RPC.println("M4: controlSignal = " + String(controlSignal));
   motorLoop();
 }
