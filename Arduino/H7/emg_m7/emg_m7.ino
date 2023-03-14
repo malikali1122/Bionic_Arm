@@ -6,9 +6,8 @@
 bool PRINT_RPC_STREAM = true;
 int prevControlSignal = 0;
 
-/* INITIALISATIONS */
-#define SENSOR1_PIN A1
-#define SENSOR2_PIN A2
+#define SENSOR1_PIN A0
+#define SENSOR2_PIN A1
 
 #define ERROR_LED 13
 
@@ -26,11 +25,11 @@ unsigned long timeBudget;
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // START OF TUNING PARAMETERS
 
-const long intensityThreshold1 = 10000; // Threshold for hard-coded determination of low or high intensity
-const long intensityThreshold2 = 10000;
+const long intensityThreshold1 = 2000; // Threshold for hard-coded determination of low or high intensity
+const long intensityThreshold2 = 2000;
 
-const long durationThreshold1 = 900; // Threshold (ms) for the distinction between short and long signal
-const long durationThreshold2 = 900;
+const long durationThreshold1 = 2000; // Threshold (ms) for the distinction between short and long signal
+const long durationThreshold2 = 2000;
 
 const int averageLength = 1000; // Constant (need tuning?)
 const int envelopeReach = 100; // May need tuning!!
