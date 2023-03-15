@@ -34,16 +34,12 @@ void motorLoop() {
   loopStartTime = micros();
   (*gesturesPtr).periodicUpdate();
 
-  switch(controlSignal) {
-      case 3:
-        (*gesturesPtr).toggleFist();
-        break;
-      case 6:
-        (*gesturesPtr).toggleElbow();
-        break;
-      default:
-        RPC.println("Invalid input");
-        break;
+  if (toggleFist) {
+    (*gesturesPtr).toggleFist();
+    toggleFist = 0;
+  } else if (toggleElbow) {
+    (*gesturesPtr).toggleElbow();
+    toggleElbow = 0;
   }
     
   nsTimeLapsed = micros() - loopStartTime;
