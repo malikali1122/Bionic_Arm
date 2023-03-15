@@ -40,11 +40,11 @@ void motorLoop() {
       RPC.println("Inside switch");
       case 3:
         RPC.println("Doing 3");
-        // (*gesturesPtr).toggleFist();
+        (*gesturesPtr).toggleFist();
         break;
       case 6:
         RPC.println("Doing 6");
-        // (*gesturesPtr).toggleElbow();
+        (*gesturesPtr).toggleElbow();
         break;
       default:
         RPC.println("Invalid input");

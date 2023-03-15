@@ -2,14 +2,23 @@
 #include "RPC.h"
 #include "RealTimeGestures.h"
 
+
+/*  
+    This example says that D3 & D6 have some issue with PWM
+    https://github.com/khoih-prog/Portenta_H7_TimerInterrupt/blob/main/examples/PWM/PWM_Multi/PWM_Multi.ino
+
+    This forum post says that D1, D3 and D6 have issues with PWM
+    https://forum.arduino.cc/t/portenta-pwm-issues/866822/3
+*/
+
 // pwm pins used for 
-#define THUMB_PIN 2
-#define THUMB_BASE_PIN 3
-#define INDEX_PIN 5
-#define MIDDLE_PIN 7
-#define RING_PINKY_PIN 9
-#define ELBOW_L_PIN 11
-#define ELBOW_R_PIN 13
+#define THUMB_PIN 1
+#define THUMB_BASE_PIN 2
+#define INDEX_PIN 3
+#define MIDDLE_PIN 4
+#define RING_PINKY_PIN 5
+#define ELBOW_L_PIN 6
+#define ELBOW_R_PIN 7
 
 Servo srvArrHand[5]; // array of servo objects for hand
 Servo srvArrElbow[2];
