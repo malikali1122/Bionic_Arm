@@ -12,13 +12,13 @@
 */
 
 // pwm pins used for 
-#define THUMB_PIN 1
-#define THUMB_BASE_PIN 2
-#define INDEX_PIN 3
-#define MIDDLE_PIN 4
-#define RING_PINKY_PIN 5
-#define ELBOW_L_PIN 6
-#define ELBOW_R_PIN 7
+#define THUMB_PIN 6
+#define THUMB_BASE_PIN 5
+#define INDEX_PIN 4
+#define MIDDLE_PIN 3
+#define RING_PINKY_PIN 2
+#define ELBOW_L_PIN 1
+#define ELBOW_R_PIN 0
 
 Servo srvArrHand[5]; // array of servo objects for hand
 Servo srvArrElbow[2];

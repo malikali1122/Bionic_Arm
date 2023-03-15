@@ -3,10 +3,6 @@ void emgSetup()
 
   pinMode(ERROR_LED, OUTPUT);
   pinMode(LED_BUILTIN,OUTPUT);
-  pinMode(2,INPUT);
-  pinMode(3,INPUT);
-  pinMode(4,INPUT);
-  pinMode(5,INPUT);
   pinMode(A0,INPUT);
   
 
