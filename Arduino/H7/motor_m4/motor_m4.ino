@@ -34,7 +34,7 @@ unsigned long nsTimeBudget;
 int controlSignal = 0;
 
 void motorSetup();
-void motorLoop();
+void motorLoop(int signalInput);
 
 /* Update the control signal */
 void updateControl(int newControlSignal)
@@ -63,5 +63,5 @@ void loop()
   // DEV: Add motor loop code here
   // use controlSignal for switch case
   RPC.println("M4: controlSignal = " + String(controlSignal));
-  motorLoop();
+  motorLoop(controlSignal);
 }
