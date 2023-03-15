@@ -90,7 +90,7 @@ void setup()
 }
 
 int getTestSignal() {
-  testSignal = (testSignal + 1)%3;
+  testSignal = (testSignal + 1)%7;
   return testSignal;
 }
 
