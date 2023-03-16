@@ -63,6 +63,8 @@ long previousEnvelope2 = 0;
 
 int channelID = 1; // Default value for channel selection
 
+int testSignal = 0;
+
 
 // discrete filters must works with fixed sample frequence
 // our emg filter only support "SAMPLE_FREQ_500HZ" or "SAMPLE_FREQ_1000HZ"
@@ -84,34 +86,35 @@ void setup()
   } // Wait until the Serial connection is ready
 
   // DEV: Add emg setup code here
-  emgSetup();
+  // emgSetup();
+}
+
+int getTestSignal() {
+  testSignal = (testSignal + 1)%7;
+  return testSignal;
 }
 
 void loop()
 {
   // DEV: Add emg loop code here
-  int controlSignal = getControlSignal();
+  // int controlSignal = getControlSignal();
+  int controlSignal = getTestSignal();
 
   updateControlSignal(controlSignal);
 
   if (PRINT_RPC_STREAM)
     printRPCStream();
+
+  delay(2);
 }
 
 // On change of control signal, send it to the M4
 // and also update in M7
 void updateControlSignal(int controlSignal)
 {
-    // Serial.print("M7: CS - " + String(controlSignal));
-    // RPC.send("updateControl", controlSignal);
-
-    
-  if (prevControlSignal != controlSignal)
-  {
+  
     RPC.send("updateControl", controlSignal);
-    Serial.println("M7: executing updateControl with " + String(controlSignal));
-    prevControlSignal = controlSignal;
-  }
+    Serial.println("M7: Control Signal: " + String(controlSignal));
 
   // if (prevControlSignal != controlSignal)
   // {

@@ -31,30 +31,16 @@ RealTimeGestures* gesturesPtr;
 unsigned long loopStartTime, nsTimeLapsed;
 unsigned long nsTimeBudget;
 
-int toggleFist = 0;
-int toggleElbow = 0;
+int controlSignal = 0;
 
 void motorSetup();
 void motorLoop();
 
 /* Update the control signal */
-void updateControl(int controlSignal)
-{ 
-  switch(controlSignal) {
-    case 3:
-      if (!toggleFist)
-        toggleFist = 1;
-      break;
-    case 6:
-      if (!toggleElbow)
-        toggleElbow = 1;
-      break;
-    case 0:
-      RPC.println("M4: Received Control Signal 0");
-    default:
-      RPC.println("Invalid input");
-      break;
-  }
+void updateControl(int newControlSignal)
+{
+  RPC.println("M4: executing updateControl with " + String(newControlSignal));
+  controlSignal = newControlSignal;
 }
 
 void setup()
@@ -76,5 +62,6 @@ void loop()
 {
   // DEV: Add motor loop code here
   // use controlSignal for switch case
+  RPC.println("M4: controlSignal = " + String(controlSignal));
   motorLoop();
 }

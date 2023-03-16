@@ -34,21 +34,12 @@ void motorLoop() {
   loopStartTime = micros();
   (*gesturesPtr).periodicUpdate();
 
-  RPC.println("Inside motorLoop");
-
-  switch(controlSignal) {
-      RPC.println("Inside switch");
-      case 3:
-        RPC.println("Doing 3");
-        // (*gesturesPtr).toggleFist();
-        break;
-      case 6:
-        RPC.println("Doing 6");
-        // (*gesturesPtr).toggleElbow();
-        break;
-      default:
-        RPC.println("Invalid input");
-        break;
+  if (toggleFist) {
+    (*gesturesPtr).toggleFist();
+    toggleFist = 0;
+  } else if (toggleElbow) {
+    (*gesturesPtr).toggleElbow();
+    toggleElbow = 0;
   }
     
   nsTimeLapsed = micros() - loopStartTime;

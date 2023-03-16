@@ -3,6 +3,10 @@ void emgSetup()
 
   pinMode(ERROR_LED, OUTPUT);
   pinMode(LED_BUILTIN,OUTPUT);
+  pinMode(2,INPUT);
+  pinMode(3,INPUT);
+  pinMode(4,INPUT);
+  pinMode(5,INPUT);
   pinMode(A0,INPUT);
   
 
@@ -31,6 +35,58 @@ int getControlSignal()
   averageVal2 = smoothing(temp2,2); // Obtain sensor 2 data
   envelopeVal = envelope(averageVal1,averageVal2);
   
+  //Serial.println(averageVal1);
+  
+
+  // Switch toggling for channel labelling
+  if(analogRead(A0)==0){
+    channelID = 1; // Switch 'untoggled' state
+  }
+  
+  if(analogRead(A0)==1023){
+    channelID = 2; // Switch 'toggled' state
+  }
+  
+  // Button press for gesture labelling
+  if(digitalRead(2)==HIGH){
+    gestureID = 1;
+  }
+  if(digitalRead(3)==HIGH){
+    gestureID = 2;
+  }
+  if(digitalRead(4)==HIGH){
+    gestureID = 3;
+  }
+  if(digitalRead(5)==HIGH){
+    gestureID = 4;
+  }
+
+
+  
+
+  if(envelopeVal == 1){ // If 1 then an event in channel 1 occured (Labelling)
+    //Serial.print(1); // Printing the channel that detected an event
+    //Serial.print(",");
+    //Serial.print(channelID); // The ID of the channel that is the 'intended' signal mover
+    //Serial.print(",");
+    //Serial.println(gestureID); // The ID/type of the gesture or signal intended
+  }
+
+  if(envelopeVal == 2){ // If 2 then an event in channel 2 occured (Labelling)
+    //Serial.print(2); // Printing the channel that detected an event
+    //Serial.print(",");
+    //Serial.print(channelID); // The ID of the channel that is the 'intended' signal mover
+    //Serial.print(",");
+    //Serial.println(gestureID); // The ID/type of the gesture or signal intended
+  }
+
+  if(envelopeVal == 3){ // If 3 then an event in both channels occured (Labelling)
+    //Serial.print(3); // Printing the channel that detected an event
+    //Serial.print(",");
+    //Serial.print(channelID); // The ID of the channel that is the 'intended' signal mover
+    //Serial.print(",");
+    //Serial.println(gestureID); // The ID/type of the gesture or signal intended
+  }
 
   
 
@@ -45,8 +101,6 @@ int getControlSignal()
   // matches the sampling rate
 
   maintainOperatingFrequency();
-
-  Serial.println("Envelope: " + String(envelopeVal));
 
   return envelopeVal;
 }
@@ -173,8 +227,8 @@ int envelope(long temp1, long temp2){
 
       }
       else if(eventArea1>intensityThreshold1){ // Here we know channel 1, duration is short, intensity high
+        Serial.println(3);
         controlSig=3;
-        Serial.println("env (3): " + String(controlSig));
       }
     }
 
@@ -255,9 +309,8 @@ int envelope(long temp1, long temp2){
 
       }
       else if(eventArea2>intensityThreshold2){ // Here we know channel 2, duration is short, intensity high
-        // Serial.println(6);
+        Serial.println(6);
         controlSig=6;
-        Serial.println("env (6): " + String(controlSig));
       }
     }
 
@@ -273,8 +326,6 @@ int envelope(long temp1, long temp2){
   envelopePeakValue2 = 0; // Set the current best back to zero ready for the next function call
 
   //printFlagCombination = printFlag1+printFlag2;
-
-  Serial.println("env (default): " + String(controlSig));
 
   return controlSig;
     
