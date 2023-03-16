@@ -1,6 +1,6 @@
 // include guard
-#ifndef IR_H
-#define IR_H
+#ifndef EMG_SENSOR_H
+#define EMG_SENSOR_H
 
 // include Arduino library
 #include "Arduino.h"
