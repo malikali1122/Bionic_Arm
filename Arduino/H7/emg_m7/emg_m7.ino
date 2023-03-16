@@ -32,6 +32,14 @@ void setup()
   motorSetup();
 }
 
+/*
+    NOTE:
+    - Both emgLoop & motorLoop has implementations for maintaining the operating frequency
+        * This should be combined together as a single implementation in the main loop
+    - This code is not tested on the Arm yet!!!
+
+*/
+
 void loop()
 {
   emgLoop();
