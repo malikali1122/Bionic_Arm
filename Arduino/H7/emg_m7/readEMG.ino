@@ -14,7 +14,7 @@ void emgSetup()
   initialiseSensors();
 }
 
-int getControlSignal()
+void emgLoop()
 {
   /* add main program code here */
   /*------------start here-------------------*/
@@ -30,9 +30,8 @@ int getControlSignal()
   averageVal1 = smoothing(temp1,1); // Obtain sensor 1 data
   averageVal2 = smoothing(temp2,2); // Obtain sensor 2 data
   envelopeVal = envelope(averageVal1,averageVal2);
-  
 
-  
+  updateControlSignal(envelopeVal);
 
   runTime = micros() - runTime;
 
@@ -45,11 +44,36 @@ int getControlSignal()
   // matches the sampling rate
 
   maintainOperatingFrequency();
-
-  Serial.println("Envelope: " + String(envelopeVal));
-
-  return envelopeVal;
 }
+
+
+
+// On change of control signal set the flag
+void updateControlSignal(int controlSignal)
+{
+
+  if (prevControlSignal != controlSignal)
+  {
+    switch (controlSignal)
+    {
+    case 3:
+      if (!toggleFist)
+        toggleFist = 1;
+      break;
+    case 6:
+      if (!toggleElbow)
+        toggleElbow = 1;
+      break;
+    case 0:
+      Serial.println("Received Control Signal 0");
+    default:
+      Serial.println("Invalid input");
+      break;
+    }
+    prevControlSignal = controlSignal;
+  }
+}
+
 
 long smoothing(int temp1, int sensorChannel){
   long movingAverage; // Not needed to be global. Re-stated each call.
