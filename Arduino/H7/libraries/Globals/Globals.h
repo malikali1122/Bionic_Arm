@@ -56,9 +56,13 @@ extern long previousEnvelope2;
 
 extern int channelID;
 
-// discrete filters must works with fixed sample frequence
-// our emg filter only support "SAMPLE_FREQ_500HZ" or "SAMPLE_FREQ_1000HZ"
-// other sampleRate inputs will bypass all the EMG_FILTER
 extern SAMPLE_FREQUENCY sampleRate;
+
+extern unsigned long loopStartTime;
+extern unsigned long nsTimeLapsed;
+extern unsigned long nsTimeBudget;
+
+extern int toggleFist;
+extern int toggleElbow;
 
 #endif // GLOBALS_H

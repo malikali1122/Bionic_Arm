@@ -56,3 +56,10 @@ int channelID = 1; // Default value for channel selection
 // our emg filter only support "SAMPLE_FREQ_500HZ" or "SAMPLE_FREQ_1000HZ"
 // other sampleRate inputs will bypass all the EMG_FILTER
 SAMPLE_FREQUENCY sampleRate = SAMPLE_FREQ_500HZ;
+
+unsigned long loopStartTime = 0;
+unsigned long nsTimeLapsed = 0;
+unsigned long nsTimeBudget = 0;
+
+int toggleFist = 0;
+int toggleElbow = 0;
