@@ -3,14 +3,10 @@
 #include "EMG_Sensor.h"
 #include "EMGFilters.h"
 #include "RealTimeGestures.h"
+#include "pins.h"
 
-bool PRINT_RPC_STREAM = true;
 int prevControlSignal = 0;
 
-#define SENSOR1_PIN A0
-#define SENSOR2_PIN A1
-
-#define ERROR_LED 13
 
 // Modify value according to number of sensors used
 #define SENSOR_COUNT 2
@@ -75,14 +71,6 @@ int getControlSignal();
 
 /* ***************** MOTOR */
 
-// pwm pins used for
-#define THUMB_PIN 6
-#define THUMB_BASE_PIN 5
-#define INDEX_PIN 4
-#define MIDDLE_PIN 3
-#define RING_PINKY_PIN 2
-#define ELBOW_L_PIN 1
-#define ELBOW_R_PIN 0
 
 Servo srvArrHand[5]; // array of servo objects for hand
 Servo srvArrElbow[2];
