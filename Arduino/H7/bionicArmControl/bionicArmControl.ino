@@ -1,11 +1,21 @@
+/*
+    Bionic Arm Control
+
+    * This is developed for the Portenta H7 board
+
+    This file contains the main loop for the bionic arm control system.
+    - emg part
+    - motor part
+*/
+
 #include "Arduino.h"
 #include "RPC.h"
 #include <Servo.h>
 #include "EMG_Sensor.h"
 #include "EMGFilters.h"
-#include "RealTimeGestures.h"
 #include "pins.h"
 #include "Globals.h"
+#include "RealTimeGestures.h"
 
 /* Instantiate EMG_Sensors
     EMG_Sensor(int sensorPin, SAMPLE_FREQUENCY sampleRate, int threshold);
@@ -14,7 +24,7 @@ EMG_Sensor emg[SENSOR_COUNT] = {EMG_Sensor(SENSOR1_PIN, sampleRate, 10), EMG_Sen
 
 // Instantiate Servo objects
 Servo srvArrHand[5]; // array of servo objects for hand
-Servo srvArrElbow[2];
+Servo srvArrElbow[2]; 
 Servo thumb;
 Servo thumbBase;
 Servo indexMiddle;
@@ -22,7 +32,6 @@ Servo ringPinky;
 
 // Instantiate RealTimeGestures object
 RealTimeGestures *gesturesPtr;
-
 
 void setup()
 {
