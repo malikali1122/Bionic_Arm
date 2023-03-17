@@ -1,3 +1,13 @@
+/*
+    Bionic Arm Control
+
+    * This is developed for the Portenta H7 board
+
+    This file contains the main loop for the bionic arm control system.
+    - emg part
+    - motor part
+*/
+
 #include "Arduino.h"
 #include "RPC.h"
 #include <Servo.h>
