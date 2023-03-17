@@ -1,4 +1,7 @@
 {
     "python.pythonPath": "C:\\Users\\henry\\anaconda3\\python.exe",
     "python.terminal.activateEnvironment": true,
+    "files.associations": {
+        "pindeclarations.h": "c"
+    },
 }

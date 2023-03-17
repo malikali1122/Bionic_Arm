@@ -12,13 +12,13 @@
 */
 
 // pwm pins used for 
-#define THUMB_PIN 1
-#define THUMB_BASE_PIN 2
-#define INDEX_PIN 3
-#define MIDDLE_PIN 4
-#define RING_PINKY_PIN 5
-#define ELBOW_L_PIN 6
-#define ELBOW_R_PIN 7
+#define THUMB_PIN 6
+#define THUMB_BASE_PIN 5
+#define INDEX_PIN 4
+#define MIDDLE_PIN 3
+#define RING_PINKY_PIN 2
+#define ELBOW_L_PIN 1
+#define ELBOW_R_PIN 0
 
 Servo srvArrHand[5]; // array of servo objects for hand
 Servo srvArrElbow[2];
@@ -31,16 +31,30 @@ RealTimeGestures* gesturesPtr;
 unsigned long loopStartTime, nsTimeLapsed;
 unsigned long nsTimeBudget;
 
-int controlSignal = 0;
+int toggleFist = 0;
+int toggleElbow = 0;
 
 void motorSetup();
 void motorLoop(int signalInput);
 
 /* Update the control signal */
-void updateControl(int newControlSignal)
-{
-  RPC.println("M4: executing updateControl with " + String(newControlSignal));
-  controlSignal = newControlSignal;
+void updateControl(int controlSignal)
+{ 
+  switch(controlSignal) {
+    case 3:
+      if (!toggleFist)
+        toggleFist = 1;
+      break;
+    case 6:
+      if (!toggleElbow)
+        toggleElbow = 1;
+      break;
+    case 0:
+      RPC.println("M4: Received Control Signal 0");
+    default:
+      RPC.println("Invalid input");
+      break;
+  }
 }
 
 void setup()
@@ -64,4 +78,5 @@ void loop()
   // use controlSignal for switch case
   RPC.println("M4: controlSignal = " + String(controlSignal));
   motorLoop(controlSignal);
+  motorLoop();
 }
