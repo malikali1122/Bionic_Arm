@@ -3,10 +3,6 @@ void emgSetup()
 
   pinMode(ERROR_LED, OUTPUT);
   pinMode(LED_BUILTIN,OUTPUT);
-  pinMode(2,INPUT);
-  pinMode(3,INPUT);
-  pinMode(4,INPUT);
-  pinMode(5,INPUT);
   pinMode(A0,INPUT);
   
 
@@ -18,7 +14,7 @@ void emgSetup()
   initialiseSensors();
 }
 
-int getControlSignal()
+void emgLoop()
 {
   /* add main program code here */
   /*------------start here-------------------*/
@@ -30,65 +26,23 @@ int getControlSignal()
 
   temp1 = emg[0].readSensorData();
   temp2 = emg[1].readSensorData();
+
+  Serial.print("Sensor_1:");
+  Serial.println(temp1);
+  Serial.print("Sensor_2:");
+  Serial.println(temp2);
   
   averageVal1 = smoothing(temp1,1); // Obtain sensor 1 data
   averageVal2 = smoothing(temp2,2); // Obtain sensor 2 data
   envelopeVal = envelope(averageVal1,averageVal2);
   
-  //Serial.println(averageVal1);
-  
 
-  // Switch toggling for channel labelling
-  if(analogRead(A0)==0){
-    channelID = 1; // Switch 'untoggled' state
-  }
-  
-  if(analogRead(A0)==1023){
-    channelID = 2; // Switch 'toggled' state
-  }
-  
-  // Button press for gesture labelling
-  if(digitalRead(2)==HIGH){
-    gestureID = 1;
-  }
-  if(digitalRead(3)==HIGH){
-    gestureID = 2;
-  }
-  if(digitalRead(4)==HIGH){
-    gestureID = 3;
-  }
-  if(digitalRead(5)==HIGH){
-    gestureID = 4;
-  }
+  Serial.print("Avg_1:");
+  Serial.println(averageVal1);
+  Serial.print("Avg_2:");
+  Serial.println(averageVal2);
 
-
-  
-
-  if(envelopeVal == 1){ // If 1 then an event in channel 1 occured (Labelling)
-    //Serial.print(1); // Printing the channel that detected an event
-    //Serial.print(",");
-    //Serial.print(channelID); // The ID of the channel that is the 'intended' signal mover
-    //Serial.print(",");
-    //Serial.println(gestureID); // The ID/type of the gesture or signal intended
-  }
-
-  if(envelopeVal == 2){ // If 2 then an event in channel 2 occured (Labelling)
-    //Serial.print(2); // Printing the channel that detected an event
-    //Serial.print(",");
-    //Serial.print(channelID); // The ID of the channel that is the 'intended' signal mover
-    //Serial.print(",");
-    //Serial.println(gestureID); // The ID/type of the gesture or signal intended
-  }
-
-  if(envelopeVal == 3){ // If 3 then an event in both channels occured (Labelling)
-    //Serial.print(3); // Printing the channel that detected an event
-    //Serial.print(",");
-    //Serial.print(channelID); // The ID of the channel that is the 'intended' signal mover
-    //Serial.print(",");
-    //Serial.println(gestureID); // The ID/type of the gesture or signal intended
-  }
-
-  
+  updateControlSignal(envelopeVal);
 
   runTime = micros() - runTime;
 
@@ -101,26 +55,57 @@ int getControlSignal()
   // matches the sampling rate
 
   maintainOperatingFrequency();
-
-  return envelopeVal;
 }
+
+
+
+// On change of control signal set the flag
+void updateControlSignal(int controlSignal)
+{
+ // dev Serial.println("Control signal received: ");
+ // dev Serial.println(controlSignal);
+
+  if (prevControlSignal != controlSignal)
+  {
+    switch (controlSignal)
+    {
+    case 3:
+      if (!toggleFist)
+        toggleFist = 1;
+      break;
+    case 6:
+      if (!toggleElbow)
+        toggleElbow = 1;
+      break;
+    case 0:
+     // dev Serial.println("Received Control Signal 0");
+    default:
+     // dev Serial.println("Invalid input");
+      break;
+    }
+    prevControlSignal = controlSignal;
+  }
+}
+
 
 long smoothing(int temp1, int sensorChannel){
   long movingAverage; // Not needed to be global. Re-stated each call.
-  int readings1[averageLength]; // Length of the averaging filter to be applied.
-  int readings2[averageLength];
-  int readIndex1 = 0;
-  int readIndex2 = 0;
+  
+  
   long total1 = 0; // Reset for each call
   long total2 = 0;
 
   if(sensorChannel==1){ // If called with sensor channel 1
-    total1 = total1 - readings1[readIndex1];
+    
     readings1[readIndex1] = temp1;
-    total1 = total1 + readings1[readIndex1];
-    readIndex1 = readIndex1 + 1;
+    
+    for(int i=0;i<averageLength;i++){
+      total1 = total1 + readings1[i];
+    }
 
-    if(readIndex1 >= averageLength){
+    readIndex1+=1;
+
+    if(readIndex1 >= averageLength-1){
       readIndex1 = 0;
     }
 
@@ -128,16 +113,21 @@ long smoothing(int temp1, int sensorChannel){
   }
   
   if(sensorChannel==2){ // If called with sensor channel 2
-    total2 = total2 - readings2[readIndex2];
-    readings2[readIndex2] = temp2;
-    total2 = total2 + readings2[readIndex2];
-    readIndex2 = readIndex2 + 1;
+    
+    readings2[readIndex2] = temp1;
+    
+    for(int i=0;i<averageLength;i++){
+      total2 = total2 + readings2[i];
+    }
 
-    if(readIndex2 >= averageLength){
+    readIndex2+=1;
+
+    if(readIndex2 >= averageLength-1){
       readIndex2 = 0;
     }
 
     movingAverage = total2/averageLength;
+
   }
 
   return movingAverage; // Returning new average value regardless of sensor channel
@@ -166,6 +156,11 @@ int envelope(long temp1, long temp2){
   int printFlagCombination = 0;
   
   int i; // For use as a counter / iterator
+
+ // dev Serial.println("Channel 1 averaged: ");
+ // dev Serial.println(temp1);
+ // dev Serial.println("Channel 2 averaged: ");
+ // dev Serial.println(temp2);
 
   // Channel 1 start
   signalReadings1[envelopeIndex1] = temp1; // Storing the most recent reading in the array
@@ -227,8 +222,8 @@ int envelope(long temp1, long temp2){
 
       }
       else if(eventArea1>intensityThreshold1){ // Here we know channel 1, duration is short, intensity high
-        Serial.println(3);
         controlSig=3;
+       // dev Serial.println("env (3): " + String(controlSig));
       }
     }
 
@@ -309,8 +304,9 @@ int envelope(long temp1, long temp2){
 
       }
       else if(eventArea2>intensityThreshold2){ // Here we know channel 2, duration is short, intensity high
-        Serial.println(6);
+        //// dev Serial.println(6);
         controlSig=6;
+       // dev Serial.println("env (6): " + String(controlSig));
       }
     }
 
@@ -326,6 +322,14 @@ int envelope(long temp1, long temp2){
   envelopePeakValue2 = 0; // Set the current best back to zero ready for the next function call
 
   //printFlagCombination = printFlag1+printFlag2;
+
+ // dev Serial.println("env (default): " + String(controlSig));
+
+ 
+  Serial.print("Env_1:");
+  Serial.println(previousEnvelope1);
+  Serial.print("Env_2:");
+  Serial.println(previousEnvelope2);
 
   return controlSig;
     
