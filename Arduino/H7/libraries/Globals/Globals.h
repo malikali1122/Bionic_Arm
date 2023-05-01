@@ -38,6 +38,10 @@ extern int temp2;
 extern long averageVal1;
 extern long envelopeVal;
 extern int signalReadings1[];
+extern int readings1[]; // Length of the averaging filter to be applied.
+extern int readings2[];
+extern int readIndex1;
+extern int readIndex2;
 extern int eventFlag1;
 extern long eventArea1;
 extern long eventStartTime1;

@@ -20,7 +20,7 @@
 /* Instantiate EMG_Sensors
     EMG_Sensor(int sensorPin, SAMPLE_FREQUENCY sampleRate, int threshold);
 */
-EMG_Sensor emg[SENSOR_COUNT] = {EMG_Sensor(SENSOR1_PIN, sampleRate, 10), EMG_Sensor(SENSOR2_PIN, sampleRate, 10)};
+EMG_Sensor emg[SENSOR_COUNT] = {EMG_Sensor(SENSOR1_PIN, sampleRate, 2000), EMG_Sensor(SENSOR2_PIN, sampleRate, 2000)};
 
 // Instantiate Servo objects
 Servo srvArrHand[5]; // array of servo objects for hand

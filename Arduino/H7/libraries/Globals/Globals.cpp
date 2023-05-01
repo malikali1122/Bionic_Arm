@@ -21,8 +21,8 @@ const long intensityThreshold2 = 2000;
 const long durationThreshold1 = 2000; // Threshold (ms) for the distinction between short and long signal
 const long durationThreshold2 = 2000;
 
-const int averageLength = 1000; // Constant (need tuning?)
-const int envelopeReach = 100;  // May need tuning!!
+const int averageLength = 300; // Constant (need tuning?)
+const int envelopeReach = 50;  // May need tuning!!
 
 // END OF TUNING PARAMETERS
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -34,6 +34,10 @@ int temp2 = 0;
 long averageVal1 = 0;
 long envelopeVal = 0;
 int signalReadings1[envelopeReach] = {0};
+int readings1[averageLength] = {0}; // Length of the averaging filter to be applied.
+int readings2[averageLength] = {0};
+int readIndex1 = 0;
+int readIndex2 = 0;
 int eventFlag1 = 0;       // Toggle between 0 and 1 if the envelope rises above 0 or falls back to 0 (start and end flag)
 long eventArea1 = 0;      // Variable to track the intensity (cumulative) as an event occurs
 long eventStartTime1 = 0; // Variable to record the start time for any one event
