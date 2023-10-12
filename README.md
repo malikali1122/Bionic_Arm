@@ -1,9 +1,33 @@
 
+
   
   
 
 # Bionic Arm
 
+
+## QuickStart
+**Arduino > H7 > BionicArmControl:** 
+* This is the location of the Arduino code to control the Arm.
+* Ensure that the library path in the Arduino IDE points towards Arduino>H7>libraries.
+
+## Folders:
+**Arduino:** 
+* H7 is the latest code.
+* motorControl and readEMG are trial codes.
+
+**Data:**
+* Contains EMG data collected from various muscle groups.
+
+**ML Testing:**
+* ML related work.
+
+**Research:**
+* Few literature review and trial codes.
+
+**ProcessEMG:**
+* Python Code to receive the EMG data from the Arduino. 
+* This is used to generate Datasets required for training.
   
 
 ## Sensor:
@@ -30,9 +54,9 @@ Instantiate EMG_Sensor class in the EMG.ino file for each sensor. All the requir
 
 **Python Code**
 
-A Conda environment is defined for the python code. The required package information is present in 'environment.yml' file. After cloning the repo, create a conda environment using this .yml file.
+A Conda environment is defined for the python code (processEMG folder). The required package information is present in 'environment.yml' file. After cloning the repo, create a conda environment using this .yml file.
 
-## Setup
+## Setup for 'ProcessEMG' folder
 
  1. Clone the repo
  2. Install Anaconda. [Link](https://www.anaconda.com/products/distribution)
